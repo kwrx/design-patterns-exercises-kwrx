@@ -1,0 +1,8 @@
+
+rootProject.name = 'design-patterns-exercies-kwrx'
+
+include 'pattern-abstract-method'
+include 'pattern-abstract-factory'
+include 'pattern-builder'
+include 'pattern-prototype'
+include 'pattern-singleton'
