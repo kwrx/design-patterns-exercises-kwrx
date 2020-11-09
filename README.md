@@ -3,16 +3,16 @@
 
 ### Creational
 
-[ ] Abstract Method
-[ ] Abstract Factory
-[ ] Builder
-[ ] Prototype
-[ ] Singleton
+- [ ] Abstract Method
+- [ ] Abstract Factory
+- [ ] Builder
+- [ ] Prototype
+- [ ] Singleton
 
 ### Structural
 
-[ ] Bridge
-[ ] Adapter
+- [ ] Bridge
+- [ ] Adapter
 
 
 ## Build
