@@ -6,7 +6,7 @@
 - [ ] Abstract Method
 - [ ] Abstract Factory
 - [ ] Builder
-- [ ] Prototype
+- [x] Prototype
 - [ ] Singleton
 
 ### Structural
