@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,30 +23,47 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'java-library'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
+package org.kwrx.builder.interp;
+
+public class Token {
+
+    private final TokenType type;
+    private final String lexeme;
+    private final Object literal;
+    private final int line;
+    private final int column;
+
+    public Token(TokenType type, String lexeme, Object literal, int line, int column) {
+        this.type = type;
+        this.lexeme = lexeme;
+        this.literal = literal;
+        this.line = line;
+        this.column = column;
+    }
+
+    public TokenType getType() {
+        return type;
+    }
+
+    public String getLexeme() {
+        return lexeme;
+    }
+
+    public Object getLiteral() {
+        return literal;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public String toString() {
+        return String.format("%s %s %s", type, lexeme, literal);
+    }
+
 }
 
-
-group = 'org.kwrx.shared'
-version = '1.0'
-
-sourceCompatibility = 11
-targetCompatibility = 11
-
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
-
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
-}

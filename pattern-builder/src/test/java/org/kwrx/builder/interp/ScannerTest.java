@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,30 +23,20 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'java-library'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
+package org.kwrx.builder.interp;
 
+import org.junit.Test;
 
-group = 'org.kwrx.shared'
-version = '1.0'
+import static org.junit.Assert.*;
 
-sourceCompatibility = 11
-targetCompatibility = 11
+public class ScannerTest {
 
+    @Test
+    public void ScannerTestWithSimpleCode() {
 
-repositories {
-    mavenCentral()
-}
+        var scanner = new Scanner("### Hello World!");
+        System.out.println(scanner.getTokens());
 
-dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
+    }
 
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
 }

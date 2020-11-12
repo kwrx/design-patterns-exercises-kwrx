@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,30 +23,19 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'java-library'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
+package org.kwrx.builder;
 
 
-group = 'org.kwrx.shared'
-version = '1.0'
+public interface DocumentBuilder {
 
-sourceCompatibility = 11
-targetCompatibility = 11
+    DocumentBuilder reset();
+    DocumentBuilder withTextSize(float textSize);
+    DocumentBuilder withTextStyle(String style);
+    DocumentBuilder withTextFont(String fontName);
+    DocumentBuilder withText(String text);
+    DocumentBuilder withImage(String url);
+    DocumentBuilder withURL(String text);
 
+    Document build();
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
-
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
 }

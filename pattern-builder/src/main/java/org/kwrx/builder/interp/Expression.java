@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,30 +23,37 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'java-library'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
+package org.kwrx.builder.interp;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+public abstract class Expression {
+
+    private final List<Expression> expressions;
 
 
-group = 'org.kwrx.shared'
-version = '1.0'
+    public Expression() {
+        this.expressions = new LinkedList<>();
+    }
 
-sourceCompatibility = 11
-targetCompatibility = 11
+    public Expression(List<Expression> expressions) {
+        this.expressions = expressions;
+    }
 
+    public Expression(Expression... expressions) {
+        this.expressions = Arrays.asList(expressions);
+    }
 
-repositories {
-    mavenCentral()
-}
+    public List<Expression> getExpressions() {
+        return expressions;
+    }
 
-dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
 }

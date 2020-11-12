@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,30 +23,32 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'java-library'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
+package org.kwrx.builder.interp.expressions;
 
+import org.kwrx.builder.interp.Expression;
 
-group = 'org.kwrx.shared'
-version = '1.0'
+import java.util.List;
 
-sourceCompatibility = 11
-targetCompatibility = 11
+public class Header extends Expression {
 
+    private final int level;
 
-repositories {
-    mavenCentral()
-}
+    public Header(int level) {
+        this.level = level;
+    }
 
-dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
+    public Header(int level, List<Expression> expressions) {
+        super(expressions);
+        this.level = level;
+    }
 
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
+    public Header(int level, Expression... expressions) {
+        super(expressions);
+        this.level = level;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
 }

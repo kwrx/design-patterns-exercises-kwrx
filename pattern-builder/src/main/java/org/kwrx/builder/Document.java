@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,30 +23,10 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'java-library'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
+package org.kwrx.builder;
 
+import javafx.scene.layout.VBox;
 
-group = 'org.kwrx.shared'
-version = '1.0'
+public abstract class Document extends VBox {
 
-sourceCompatibility = 11
-targetCompatibility = 11
-
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
-
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
 }

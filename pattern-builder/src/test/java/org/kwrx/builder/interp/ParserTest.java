@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,30 +23,40 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'java-library'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
+package org.kwrx.builder.interp;
 
+import org.junit.Test;
+import org.kwrx.builder.interp.expressions.Text;
 
-group = 'org.kwrx.shared'
-version = '1.0'
+import java.util.List;
 
-sourceCompatibility = 11
-targetCompatibility = 11
+import static org.junit.Assert.*;
 
+public class ParserTest {
 
-repositories {
-    mavenCentral()
-}
+    private void printExpressions(List<Expression> expressions) {
 
-dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
+        for(var i : expressions) {
 
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
+            if(i instanceof Text)
+                System.out.println(i.getClass().getSimpleName() + ": " + ((Text) i).getContent());
+
+            printExpressions(i.getExpressions());
+
+        }
+    }
+
+    @Test
+    public void ParserTestWithSimpleCode() {
+
+        var scanner = new Scanner("# *Prova* **OKOK** ***OK HELLO WORLD WOW***\n");
+        var parser = new Parser(scanner);
+
+        System.out.println(scanner.getTokens());
+        System.out.println(parser.getExpressions());
+
+        printExpressions(parser.getExpressions());
+
+    }
+
 }
