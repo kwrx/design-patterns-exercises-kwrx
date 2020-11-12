@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,18 +23,35 @@
  *
  */
 
+package org.kwrx.singleton;
+
 import org.kwrx.abstract_factory.BrandNotAvailableException;
 import org.kwrx.abstract_factory.CarFactory;
-import org.kwrx.abstract_factory.CarNotAvailableException;
-import org.kwrx.abstract_factory.CarType;
 
-public class Program {
-    public static void main(String... args) throws BrandNotAvailableException, CarNotAvailableException {
+public final class CarFactorySingleton {
 
-        var carFactory = CarFactory.getBrandFactory("Renault");
-        var car = carFactory.createCar(CarType.Family);
+    private static CarFactory carFactoryInstance;
 
-        System.out.println(car);
+    public static CarFactory getInstance() throws BrandNotAvailableException {
+
+        if(carFactoryInstance == null) {
+
+            String brand = System.getenv("BRAND");
+
+            if(brand == null)
+                brand = "Tesla";
+
+            carFactoryInstance = CarFactory.getBrandFactory(brand);
+
+        }
+
+        return carFactoryInstance;
 
     }
+
+
+    private CarFactorySingleton() {
+
+    }
+
 }

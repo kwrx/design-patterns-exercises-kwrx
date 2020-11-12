@@ -35,7 +35,7 @@ import java.util.Arrays;
 
 public class FiatModelPanda extends MonoVolumeCar {
 
-    protected FiatModelPanda() {
+    public FiatModelPanda() {
         super("Panda", EngineType.Diesel, 90, 1200, 120, 5,
                 Arrays.asList(
                         Equipments.AirConditioning,

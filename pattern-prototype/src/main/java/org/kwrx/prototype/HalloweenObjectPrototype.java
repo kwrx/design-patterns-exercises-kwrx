@@ -39,10 +39,12 @@ public class HalloweenObjectPrototype implements Cloneable {
         this.image = null;
     }
 
-    private HalloweenObjectPrototype(HalloweenObjectPrototype other) {
-        this.setImage(new Image(other.getImage().getUrl()));
-        this.setX(other.getX());
-        this.setY(other.getY());
+    HalloweenObjectPrototype(HalloweenObjectPrototype other) {
+        if(other != null) {
+            this.setImage(new Image(other.getImage().getUrl()));
+            this.setX(other.getX());
+            this.setY(other.getY());
+        }
     }
 
 

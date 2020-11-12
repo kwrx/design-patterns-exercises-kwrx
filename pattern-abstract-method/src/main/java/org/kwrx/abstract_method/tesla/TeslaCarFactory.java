@@ -34,7 +34,7 @@ import org.kwrx.abstract_method.CarType;
 public class TeslaCarFactory extends CarFactory {
 
     @Override
-    public Car createCar(CarType carType) throws CarNotAvailableException {
+    protected Car createCar(CarType carType) throws CarNotAvailableException {
 
         switch (carType) {
 

@@ -23,8 +23,16 @@
  *
  */
 
+import org.kwrx.abstract_method.CarNotAvailableException;
+import org.kwrx.abstract_method.fiat.FiatCarFactory;
+
 public class Program {
-    public static void main(String... args) {
+    public static void main(String... args) throws CarNotAvailableException {
+
+        var carFactory = new FiatCarFactory();
+        var car = carFactory.getSedanCar();
+
+        System.out.println(car);
 
     }
 }

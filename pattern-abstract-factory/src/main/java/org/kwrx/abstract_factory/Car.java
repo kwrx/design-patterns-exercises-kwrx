@@ -81,6 +81,19 @@ public class Car {
         return equipments;
     }
 
+    public String toString() {
+        return String.format(
+                "Name: %s, Type: %s, Engine: %s, Power: %d hp, Displacement: %d cc, Torque: %d n/m, Doors: %d\nEquipments: %s",
+                getName(),
+                getCarType(),
+                getEngineType(),
+                getPower(),
+                getDisplacement(),
+                getTorque(),
+                getDoors(),
+                getEquipments()
+        );
+    }
 
 
 }

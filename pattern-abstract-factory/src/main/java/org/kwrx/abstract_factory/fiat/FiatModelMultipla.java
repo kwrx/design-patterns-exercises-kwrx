@@ -35,8 +35,8 @@ import java.util.Arrays;
 
 public class FiatModelMultipla extends FamilyCar {
 
-    protected FiatModelMultipla() {
-        super("Multipla", EngineType.Diesel, 90, 1100, 120, 5,
+    public FiatModelMultipla() {
+        super("Multipla", EngineType.Diesel, 95, 1900, 120, 5,
                 Arrays.asList(
                         Equipments.AirConditioning,
                         Equipments.ElectricWindows,

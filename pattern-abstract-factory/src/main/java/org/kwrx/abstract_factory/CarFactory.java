@@ -32,10 +32,10 @@ import org.kwrx.abstract_factory.tesla.TeslaCarFactory;
 
 public abstract class CarFactory {
 
-    protected abstract Car createCar(CarType carType) throws CarNotAvailableException;
+    public abstract Car createCar(CarType carType) throws CarNotAvailableException;
 
 
-    public CarFactory getBrandFactory(String brand) throws BrandNotAvailableException {
+    public static CarFactory getBrandFactory(String brand) throws BrandNotAvailableException {
 
         switch (brand) {
 

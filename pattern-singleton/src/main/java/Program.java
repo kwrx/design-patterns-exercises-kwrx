@@ -24,8 +24,18 @@
  *
  */
 
+import org.kwrx.abstract_factory.BrandNotAvailableException;
+import org.kwrx.abstract_factory.CarNotAvailableException;
+import org.kwrx.abstract_factory.CarType;
+import org.kwrx.singleton.CarFactorySingleton;
+
 public class Program {
-    public static void main(String... args) {
-        
+    public static void main(String... args) throws BrandNotAvailableException, CarNotAvailableException {
+
+        var car = CarFactorySingleton.getInstance()
+                .createCar(CarType.Family);
+
+        System.out.println(car);
+
     }
 }
