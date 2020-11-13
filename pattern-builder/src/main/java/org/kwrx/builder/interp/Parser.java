@@ -25,6 +25,8 @@
 
 package org.kwrx.builder.interp;
 
+import org.kwrx.builder.interp.expressions.Blockquote;
+import org.kwrx.builder.interp.expressions.ListElement;
 import org.kwrx.builder.interp.expressions.Text;
 import org.kwrx.builder.interp.expressions.Header;
 
@@ -104,6 +106,10 @@ public class Parser {
         while(isNotEOF() && !matchNextTokens(tokenTypes))
             expressions.add(parseNextToken(getNextToken()));
 
+        for(var tokenType : tokenTypes)
+            if(tokenType == NEWLINE)
+                expressions.add(new Text(System.lineSeparator()));
+
         return expressions;
 
     }
@@ -111,9 +117,11 @@ public class Parser {
 
     private Expression parseNextToken(Token token) {
 
-        switch (token.getType()) {
+        final var tokenType = token.getType();
 
-            case CONTENT, STRING, NEWLINE -> {
+        switch (tokenType) {
+
+            case CONTENT, STRING -> {
                 return new Text((String) token.getLiteral());
             }
 
@@ -124,6 +132,14 @@ public class Parser {
                 else
                     return new Text(" ");
 
+            }
+
+            case DOT -> {
+                return new Text(".");
+            }
+
+            case NEWLINE -> {
+                return new Text("\n");
             }
 
             case HASHTAG -> {
@@ -148,32 +164,48 @@ public class Parser {
 
             }
 
-            case STAR -> {
+            case STAR, UNDERSCORE -> {
 
                 if(matchNextTokens(STAR, STAR))
-                    return new Text.BoldItalic("", parseTokensUntil(STAR, STAR, STAR));
+                    return new Text.BoldItalic("", parseTokensUntil(tokenType, tokenType, tokenType));
 
                 else if(matchNextTokens(STAR))
-                    return new Text.Bold("", parseTokensUntil(STAR, STAR));
+                    return new Text.Bold("", parseTokensUntil(tokenType, tokenType));
 
                 else
-                    return new Text.Italic("", parseTokensUntil(STAR));
+                    return new Text.Italic("", parseTokensUntil(tokenType));
 
 
             }
 
-//            case ANGLE_BRACKET -> {
-//
-//                int depth = 1;
-//
-//                while(matchNextTokens(ANGLE_BRACKET))
-//                    depth++;
-//
-//
-//
-//            }
+            case ANGLE_BRACKET -> {
+
+                int depth = 1;
+
+                while(matchNextTokens(ANGLE_BRACKET))
+                    depth++;
+
+                return new Blockquote(depth, parseTokensUntil(NEWLINE));
+
+            }
+
+            case DASH -> {
+                return new ListElement.Unordered(parseTokensUntil(NEWLINE));
+            }
+
+            case NUMBER -> {
+
+                if(matchNextTokens(DOT))
+                    return new ListElement.Ordered((int) token.getLiteral(), parseTokensUntil(NEWLINE));
+                else
+                    return new Text(String.format("%d", (int) token.getLiteral()));
+
+            }
+
+
 
             default -> throw new ParsingException(token);
+
 
 
 

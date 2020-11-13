@@ -24,8 +24,29 @@
  *
  */
 
+import org.kwrx.builder.ASCIIDocumentBuilder;
+import org.kwrx.builder.DocumentDirector;
+
 public class Program {
     public static void main(String... args) {
+
+        var documentBuilder = new ASCIIDocumentBuilder();
+        var document = new DocumentDirector(documentBuilder)
+                .parse(
+                """
+                # Title 1
+                Hello World.
+                > Wow
+                >> OHHH.
+                - List 1.
+                - List 2.
+                1. Ok
+                2. WOW
+                
+                Fine.
+                """);
+
+        document.print();
         
     }
 }

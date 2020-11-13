@@ -28,7 +28,9 @@ package org.kwrx.builder;
 import org.kwrx.builder.interp.Expression;
 import org.kwrx.builder.interp.Parser;
 import org.kwrx.builder.interp.Scanner;
+import org.kwrx.builder.interp.expressions.Blockquote;
 import org.kwrx.builder.interp.expressions.Header;
+import org.kwrx.builder.interp.expressions.ListElement;
 import org.kwrx.builder.interp.expressions.Text;
 import java.util.List;
 
@@ -60,8 +62,27 @@ public class DocumentDirector {
             if(expr instanceof Header)
                 documentBuilder.withTextSize(18 + (4 * (5 - ((Header) expr).getLevel())));
 
+            else if(expr instanceof Text.Italic)
+                documentBuilder.withTextStyle("italic");
+
+            else if(expr instanceof Text.Bold)
+                documentBuilder.withTextStyle("bold");
+
+            else if(expr instanceof Text.BoldItalic)
+                documentBuilder.withTextStyle("bold-italic");
+
             else if(expr instanceof Text)
                 documentBuilder.withText(((Text) expr).getContent());
+
+            else if(expr instanceof ListElement.Ordered)
+                documentBuilder.withListElementOrdered(((ListElement.Ordered) expr).getOrder());
+
+            else if(expr instanceof ListElement.Unordered)
+                documentBuilder.withListElementUnordered();
+
+            else if(expr instanceof Blockquote)
+                documentBuilder.withBlockquote();
+
 
             parseExpressions(expr.getExpressions());
 

@@ -23,10 +23,32 @@
  *
  */
 
-package org.kwrx.builder;
+package org.kwrx.builder.interp.expressions;
 
-import javafx.scene.layout.VBox;
+import org.kwrx.builder.interp.Expression;
 
-public interface Document {
-    void print();
+import java.util.List;
+
+public class Blockquote extends Expression {
+
+    private final int depth;
+
+    public Blockquote(int depth) {
+        this.depth = depth;
+    }
+
+    public Blockquote(int depth, List<Expression> expressions) {
+        super(expressions);
+        this.depth = depth;
+    }
+
+    public Blockquote(int depth, Expression... expressions) {
+        super(expressions);
+        this.depth = depth;
+    }
+
+    public int getDepth() {
+        return depth;
+    }
+
 }

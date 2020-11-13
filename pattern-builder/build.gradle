@@ -35,8 +35,8 @@ plugins {
 group = 'org.kwrx.builder'
 version = '1.0'
 
-sourceCompatibility = 14
-targetCompatibility = 14
+sourceCompatibility = 15
+targetCompatibility = 15
 
 mainClassName = 'Program'
 

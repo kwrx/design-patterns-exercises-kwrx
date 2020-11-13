@@ -35,7 +35,11 @@ public interface DocumentBuilder {
     DocumentBuilder withText(String text);
     DocumentBuilder withImage(String url);
     DocumentBuilder withURL(String text);
+    DocumentBuilder withListElementOrdered(int order);
+    DocumentBuilder withListElementUnordered();
+    DocumentBuilder withBlockquote();
 
     Document build();
+
 
 }

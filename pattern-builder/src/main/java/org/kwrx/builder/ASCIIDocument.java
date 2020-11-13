@@ -25,8 +25,17 @@
 
 package org.kwrx.builder;
 
-import javafx.scene.layout.VBox;
+public class ASCIIDocument implements Document {
 
-public interface Document {
-    void print();
+    private final String output;
+
+    public ASCIIDocument(String output) {
+        this.output = output;
+    }
+
+    @Override
+    public void print() {
+        System.out.println(output);
+    }
+
 }
