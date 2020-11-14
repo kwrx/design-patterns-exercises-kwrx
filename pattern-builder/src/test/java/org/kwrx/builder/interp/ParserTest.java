@@ -47,7 +47,7 @@ public class ParserTest {
     }
 
     @Test
-    public void ParserTestWithSimpleCode() {
+    public void ParserTestWithSimpleCode() throws ScanningException, ParsingException {
 
         var scanner = new Scanner("# *Prova* **OKOK** ***OK HELLO WORLD WOW***\n");
         var parser = new Parser(scanner);

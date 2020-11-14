@@ -23,20 +23,27 @@
  *
  */
 
-package org.kwrx.builder.interp;
+package org.kwrx.builder.interp.expressions;
 
-import org.junit.Test;
+import org.kwrx.builder.interp.Expression;
 
-import static org.junit.Assert.*;
+import java.util.List;
 
-public class ScannerTest {
+public class ImageElement extends Expression {
 
-    @Test
-    public void ScannerTestWithSimpleCode() throws ScanningException {
+    private final String title;
+    private final String url;
 
-        var scanner = new Scanner("### Hello World!");
-        System.out.println(scanner.getTokens());
-
+    public ImageElement(String title, String url) {
+        this.title = title;
+        this.url = url;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 }

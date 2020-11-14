@@ -34,7 +34,12 @@ public class ASCIIDocumentBuilder implements DocumentBuilder {
     }
 
     @Override
-    public DocumentBuilder reset() {
+    public DocumentBuilder save() {
+        return this;
+    }
+
+    @Override
+    public DocumentBuilder restore() {
         return this;
     }
 
@@ -60,7 +65,7 @@ public class ASCIIDocumentBuilder implements DocumentBuilder {
     }
 
     @Override
-    public DocumentBuilder withImage(String url) {
+    public DocumentBuilder withImage(String text, String url) {
         return this;
     }
 

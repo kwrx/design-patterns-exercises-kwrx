@@ -24,29 +24,28 @@
  *
  */
 
-import org.kwrx.builder.ASCIIDocumentBuilder;
-import org.kwrx.builder.DocumentDirector;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class Program {
+public class Program extends Application {
+
     public static void main(String... args) {
-
-        var documentBuilder = new ASCIIDocumentBuilder();
-        var document = new DocumentDirector(documentBuilder)
-                .parse(
-                """
-                # Title 1
-                Hello World.
-                > Wow
-                >> OHHH.
-                - List 1.
-                - List 2.
-                1. Ok
-                2. WOW
-                
-                Fine.
-                """);
-
-        document.print();
-        
+        Application.launch(Program.class, args);
     }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+        primaryStage.setScene(new Scene(new EditorWindow()));
+        primaryStage.setTitle("Markdown Editor - Builder");
+        primaryStage.setWidth(1200);
+        primaryStage.setHeight(600);
+        primaryStage.setResizable(false);
+        primaryStage.centerOnScreen();
+
+        primaryStage.show();
+
+    }
+
 }

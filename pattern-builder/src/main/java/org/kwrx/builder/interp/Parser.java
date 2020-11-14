@@ -25,10 +25,7 @@
 
 package org.kwrx.builder.interp;
 
-import org.kwrx.builder.interp.expressions.Blockquote;
-import org.kwrx.builder.interp.expressions.ListElement;
-import org.kwrx.builder.interp.expressions.Text;
-import org.kwrx.builder.interp.expressions.Header;
+import org.kwrx.builder.interp.expressions.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -99,23 +96,24 @@ public class Parser {
 
 
 
-    private List<Expression> parseTokensUntil(TokenType... tokenTypes) {
+    private List<Expression> parseTokensUntil(TokenType... tokenTypes) throws ParsingException {
 
         final var expressions = new LinkedList<Expression>();
 
         while(isNotEOF() && !matchNextTokens(tokenTypes))
             expressions.add(parseNextToken(getNextToken()));
 
-        for(var tokenType : tokenTypes)
-            if(tokenType == NEWLINE)
+        for(var tokenType : tokenTypes) {
+            if (tokenType == NEWLINE)
                 expressions.add(new Text(System.lineSeparator()));
+        }
 
         return expressions;
 
     }
 
 
-    private Expression parseNextToken(Token token) {
+    private Expression parseNextToken(Token token) throws ParsingException {
 
         final var tokenType = token.getType();
 
@@ -202,6 +200,32 @@ public class Parser {
 
             }
 
+            case BANG -> {
+
+                if(!matchNextTokens(LEFT_BRACE))
+                    return new Text("!");
+
+                else {
+
+                    Token title;
+                    if((title = getNextToken()).getType() != CONTENT)
+                        throw new ParsingException(title, "missing title for image");
+
+                    if(!matchNextTokens(RIGHT_BRACE, LEFT_PAREN))
+                        throw new ParsingException(title, "wrong syntax for image");
+
+                    Token url;
+                    if((url = getNextToken()).getType() != STRING)
+                        throw new ParsingException(url, "missing URL for image");
+
+                    if(!matchNextTokens(RIGHT_PAREN))
+                        throw new ParsingException(url, "unclosed parenthesis for a image");
+
+
+                    return new ImageElement((String) title.getLiteral(), (String) url.getLiteral());
+
+                }
+            }
 
 
             default -> throw new ParsingException(token);
@@ -215,7 +239,7 @@ public class Parser {
 
 
 
-    public List<Expression> getExpressions() {
+    public List<Expression> getExpressions() throws ParsingException {
 
         while(isNotEOF()) {
 

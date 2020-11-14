@@ -23,19 +23,21 @@
  *
  */
 
-package org.kwrx.builder.interp;
+package org.kwrx.builder;
 
-import org.junit.Test;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 
-import static org.junit.Assert.*;
+public class GraphicsDocument extends Canvas implements Document {
 
-public class ScannerTest {
+    public GraphicsDocument() {
+        setWidth(600.0);
+        setHeight(550.0);
+    }
 
-    @Test
-    public void ScannerTestWithSimpleCode() throws ScanningException {
-
-        var scanner = new Scanner("### Hello World!");
-        System.out.println(scanner.getTokens());
+    @Override
+    public void print() {
 
     }
 

@@ -25,13 +25,9 @@
 
 package org.kwrx.builder;
 
-import org.kwrx.builder.interp.Expression;
-import org.kwrx.builder.interp.Parser;
-import org.kwrx.builder.interp.Scanner;
-import org.kwrx.builder.interp.expressions.Blockquote;
-import org.kwrx.builder.interp.expressions.Header;
-import org.kwrx.builder.interp.expressions.ListElement;
-import org.kwrx.builder.interp.expressions.Text;
+import org.kwrx.builder.interp.*;
+import org.kwrx.builder.interp.expressions.*;
+
 import java.util.List;
 
 public class DocumentDirector {
@@ -42,7 +38,7 @@ public class DocumentDirector {
         this.documentBuilder = documentBuilder;
     }
 
-    public Document parse(String source) {
+    public Document parse(String source) throws ScanningException, ParsingException {
 
         final var scanner = new Scanner(source);
         final var parser = new Parser(scanner);
@@ -57,7 +53,7 @@ public class DocumentDirector {
 
         for(var expr : expressions) {
 
-            documentBuilder.reset();
+            documentBuilder.save();
 
             if(expr instanceof Header)
                 documentBuilder.withTextSize(18 + (4 * (5 - ((Header) expr).getLevel())));
@@ -83,8 +79,13 @@ public class DocumentDirector {
             else if(expr instanceof Blockquote)
                 documentBuilder.withBlockquote();
 
+            else if(expr instanceof ImageElement)
+                documentBuilder.withImage(((ImageElement) expr).getTitle(), ((ImageElement) expr).getUrl());
+
 
             parseExpressions(expr.getExpressions());
+
+            documentBuilder.restore();
 
         }
 

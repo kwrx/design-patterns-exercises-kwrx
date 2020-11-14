@@ -39,7 +39,7 @@ public class Scanner {
     private int column;
 
 
-    public Scanner(String source) {
+    public Scanner(String source) throws ScanningException {
 
         this.start =
         this.current =
@@ -74,7 +74,7 @@ public class Scanner {
 
     }
 
-    private void addString(char delimiter) {
+    private void addString(char delimiter) throws ScanningException {
 
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -118,7 +118,7 @@ public class Scanner {
     }
 
 
-    private void scanNextToken() {
+    private void scanNextToken() throws ScanningException {
 
         char ch;
         switch((ch = getNextChar())) {
@@ -165,7 +165,7 @@ public class Scanner {
 
     }
 
-    private void scanAllTokens() {
+    private void scanAllTokens() throws ScanningException {
 
         while(isNotEOF()) {
 

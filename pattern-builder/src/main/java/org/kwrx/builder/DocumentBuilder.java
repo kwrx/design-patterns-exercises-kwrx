@@ -28,12 +28,13 @@ package org.kwrx.builder;
 
 public interface DocumentBuilder {
 
-    DocumentBuilder reset();
+    DocumentBuilder save();
+    DocumentBuilder restore();
     DocumentBuilder withTextSize(float textSize);
     DocumentBuilder withTextStyle(String style);
     DocumentBuilder withTextFont(String fontName);
     DocumentBuilder withText(String text);
-    DocumentBuilder withImage(String url);
+    DocumentBuilder withImage(String title, String url);
     DocumentBuilder withURL(String text);
     DocumentBuilder withListElementOrdered(int order);
     DocumentBuilder withListElementUnordered();

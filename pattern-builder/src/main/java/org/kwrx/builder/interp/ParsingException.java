@@ -1,6 +1,6 @@
 package org.kwrx.builder.interp;
 
-public class ParsingException extends RuntimeException {
+public class ParsingException extends Exception {
 
     public ParsingException(Token token) {
         System.err.printf("Syntax error: %s: Unexpected token: '%s' at line %d, column %d%n", getClass().getSimpleName(), token.getLexeme(), token.getLine(), token.getColumn());
