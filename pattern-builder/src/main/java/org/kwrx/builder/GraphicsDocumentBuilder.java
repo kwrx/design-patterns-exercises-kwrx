@@ -133,6 +133,7 @@ public class GraphicsDocumentBuilder implements DocumentBuilder {
 
                 default -> {
 
+                    reserveSpaceY(computeCharSizeY(s));
                     graphicsContext.fillText(String.valueOf(s), currentX, currentY);
 
                     currentX += computeCharSizeX(s);
@@ -140,9 +141,6 @@ public class GraphicsDocumentBuilder implements DocumentBuilder {
                 }
 
             }
-
-            if(currentY + 128 > graphicsDocument.getHeight())
-                graphicsDocument.setHeight(currentY + 128);
 
         }
 
@@ -156,6 +154,7 @@ public class GraphicsDocumentBuilder implements DocumentBuilder {
 
             final var image = new Image(url);
 
+            reserveSpaceY(image.getHeight());
             graphicsContext.drawImage(image, currentX, currentY);
 
             currentX = 0;
@@ -243,6 +242,13 @@ public class GraphicsDocumentBuilder implements DocumentBuilder {
         }};
 
         return Math.ceil(text.getLayoutBounds().getHeight());
+
+    }
+
+    private void reserveSpaceY(double height) {
+
+        if(currentY + height > graphicsDocument.getHeight())
+            graphicsDocument.setHeight(currentY + height);
 
     }
 

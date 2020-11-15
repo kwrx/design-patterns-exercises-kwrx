@@ -32,6 +32,3 @@ Testo di prova con un URL ("https://www.unical.it") oppure con [Link]("https://u
 > Lorem ipsum dolor sit amet...
 > blablablaaaa!
 >> nested **blockquote** with a text.
-
-
-
