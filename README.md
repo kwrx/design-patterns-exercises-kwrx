@@ -3,11 +3,11 @@
 
 ### Creational
 
-- [ ] Abstract Method
-- [ ] Abstract Factory
-- [ ] Builder
+- [x] Abstract Method
+- [x] Abstract Factory
+- [x] Builder
 - [x] Prototype
-- [ ] Singleton
+- [x] Singleton
 
 ### Structural
 
