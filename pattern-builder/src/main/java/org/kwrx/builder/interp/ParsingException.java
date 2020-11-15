@@ -2,12 +2,19 @@ package org.kwrx.builder.interp;
 
 public class ParsingException extends Exception {
 
+    private final String message;
+
     public ParsingException(Token token) {
-        System.err.printf("Syntax error: %s: Unexpected token: '%s' at line %d, column %d%n", getClass().getSimpleName(), token.getLexeme(), token.getLine(), token.getColumn());
+        this.message = String.format("Syntax error: %s: unexpected token: '%s' at line %d, column %d%n", getClass().getSimpleName(), token.getLexeme(), token.getLine(), token.getColumn());
     }
 
     public ParsingException(Token token, String message) {
-        System.err.printf("Syntax error: %s: Unexpected token: '%s' at line %d, column %d: %s%n", getClass().getSimpleName(), token.getLexeme(), token.getLine(), token.getColumn(), message);
+        this.message = String.format("Syntax error: %s: unexpected token: '%s' at line %d, column %d: %s%n", getClass().getSimpleName(), token.getLexeme(), token.getLine(), token.getColumn(), message);
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
     }
 
 }

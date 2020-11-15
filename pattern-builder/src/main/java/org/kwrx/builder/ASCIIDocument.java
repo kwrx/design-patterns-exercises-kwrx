@@ -25,17 +25,21 @@
 
 package org.kwrx.builder;
 
-public class ASCIIDocument implements Document {
+import javafx.geometry.VPos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
-    private final String output;
+public class ASCIIDocument extends Text implements Document {
 
     public ASCIIDocument(String output) {
-        this.output = output;
-    }
-
-    @Override
-    public void print() {
-        System.out.println(output);
+        setFill(Paint.valueOf("#000"));
+        setFont(Font.getDefault());
+        setTextAlignment(TextAlignment.LEFT);
+        setTextOrigin(VPos.TOP);
+        setText(output);
     }
 
 }

@@ -44,6 +44,11 @@ public class ASCIIDocumentBuilder implements DocumentBuilder {
     }
 
     @Override
+    public DocumentBuilder withTextColor(String color) {
+        return this;
+    }
+
+    @Override
     public DocumentBuilder withTextSize(float textSize) {
         return this;
     }
@@ -85,8 +90,13 @@ public class ASCIIDocumentBuilder implements DocumentBuilder {
     }
 
     @Override
-    public DocumentBuilder withBlockquote() {
-        return withText(" > ");
+    public DocumentBuilder withBlockquote(int depth) {
+
+        for(var i = 0; i < depth; i++)
+            withText(" > ");
+
+        return this;
+
     }
 
     @Override

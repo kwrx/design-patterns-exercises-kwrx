@@ -94,27 +94,39 @@ public class Scanner {
 
     private void addNumber() {
 
-        char ch;
-        do {
-            ch = getNextChar();
-        } while(isNotEOF() && (Character.isDigit(ch)));
+        boolean notEOF;
+        StringBuilder stringBuilder = new StringBuilder();
 
-        current--;
-        addToken(TokenType.NUMBER, Integer.parseInt(source.substring(start, current)));
+        char ch;
+        while((notEOF = isNotEOF()) && Character.isDigit((ch = getNextChar())))
+            stringBuilder.append(ch);
+
+        if(notEOF)
+            current--;
+
+        addToken(TokenType.NUMBER, Integer.parseInt(stringBuilder.toString()));
 
     }
 
     private void addContent() {
 
+        boolean notEOF;
         StringBuilder stringBuilder = new StringBuilder();
 
         char ch;
-        while(isNotEOF() && Character.isLetterOrDigit((ch = getNextChar())))
+        while((notEOF = isNotEOF()) && Character.isLetterOrDigit(ch = getNextChar()))
             stringBuilder.append(ch);
 
-        current--;
+        if(notEOF)
+            current--;
+
         addToken(TokenType.CONTENT, stringBuilder.toString());
 
+    }
+
+    private void addSingleChar(char ch) {
+        current++;
+        addToken(TokenType.CONTENT, String.valueOf(ch));
     }
 
 
@@ -141,7 +153,7 @@ public class Scanner {
             case '_' -> addToken(TokenType.UNDERSCORE, null);
             case '*' -> addToken(TokenType.STAR, null);
             case '#' -> addToken(TokenType.HASHTAG, null);
-            case '`' -> addToken(TokenType.ESCAPE, null);
+            //case '`' -> addToken(TokenType.ESCAPE, null);
             case '!' -> addToken(TokenType.BANG, null);
             case '>' -> addToken(TokenType.ANGLE_BRACKET, null);
 
@@ -156,6 +168,8 @@ public class Scanner {
                     addNumber();
                 else if(Character.isLetter(ch))
                     addContent();
+                else if(Character.isDefined(ch))
+                    addSingleChar(ch);
                 else
                     throw new ScanningException(line, column, String.format("Unexpected character: %s", ch));
 

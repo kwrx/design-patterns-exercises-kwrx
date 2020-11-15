@@ -28,5 +28,5 @@ package org.kwrx.builder;
 import javafx.scene.layout.VBox;
 
 public interface Document {
-    void print();
+
 }

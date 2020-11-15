@@ -25,38 +25,174 @@
 
 package org.kwrx.builder.interp;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.kwrx.builder.interp.expressions.Text;
+import org.kwrx.shared.Resources;
 
-import java.util.List;
-
-import static org.junit.Assert.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class ParserTest {
 
-    private void printExpressions(List<Expression> expressions) {
+    private String sample;
 
-        for(var i : expressions) {
-
-            if(i instanceof Text)
-                System.out.println(i.getClass().getSimpleName() + ": " + ((Text) i).getContent());
-
-            printExpressions(i.getExpressions());
-
-        }
+    @Before
+    public void setUp() throws Exception {
+        sample = Files.readString(Paths.get(Resources.getURL(this, "/samples/sample01.md").getPath()));
     }
 
     @Test
-    public void ParserTestWithSimpleCode() throws ScanningException, ParsingException {
+    public void ParserTestWithSampleCode() throws ScanningException, ParsingException {
 
-        var scanner = new Scanner("# *Prova* **OKOK** ***OK HELLO WORLD WOW***\n");
+        var scanner = new Scanner(sample);
         var parser = new Parser(scanner);
 
-        System.out.println(scanner.getTokens());
-        System.out.println(parser.getExpressions());
-
-        printExpressions(parser.getExpressions());
+        parser.getExpressions();
 
     }
+
+
+    @Test
+    public void ParserTestWithNewLine() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("  \n");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
+    @Test
+    public void ParserTestWithTextStyles() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("***bold-italic*** *italic*");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
+    @Test(expected = ParsingException.class)
+    public void ParserTestWithWrongHeader() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("###### head");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
+    @Test(expected = ParsingException.class)
+    public void ParserTestWithWrongURLAddress() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("()");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
+    @Test(expected = ParsingException.class)
+    public void ParserTestWithWrongURLAddress2() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("[Titolo]()");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
+    @Test(expected = ParsingException.class)
+    public void ParserTestWithWrongURLTitle() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("[](\"URL\")");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
+    @Test(expected = ParsingException.class)
+    public void ParserTestWithWrongURLMissingParenthesis() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("[Titolo](\"URL\"");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
+    @Test(expected = ParsingException.class)
+    public void ParserTestWithWrongURLMissingParenthesis2() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("[Titolo]\"URL\")");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
+    @Test(expected = ParsingException.class)
+    public void ParserTestWithWrongURLMissingParenthesis3() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("(\"URL\"");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
+
+    @Test(expected = ParsingException.class)
+    public void ParserTestWithWrongImageAddress2() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("![Titolo]()");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
+    @Test(expected = ParsingException.class)
+    public void ParserTestWithWrongImageTitle() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("![](\"URL\")");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
+    @Test(expected = ParsingException.class)
+    public void ParserTestWithWrongImageMissingParenthesis() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("![Titolo](\"URL\"");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
+    @Test(expected = ParsingException.class)
+    public void ParserTestWithWrongImageMissingParenthesis2() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("![Titolo]\"URL\")");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
+
+    @Test(expected = ParsingException.class)
+    public void ParserTestWithWrongImageMissingParenthesis3() throws ScanningException, ParsingException {
+
+        var scanner = new Scanner("!Titolo](\"URL\")");
+        var parser = new Parser(scanner);
+
+        parser.getExpressions();
+
+    }
+
 
 }

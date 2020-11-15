@@ -33,12 +33,7 @@ public class GraphicsDocument extends Canvas implements Document {
 
     public GraphicsDocument() {
         setWidth(600.0);
-        setHeight(550.0);
-    }
-
-    @Override
-    public void print() {
-
+        setHeight(730.0);
     }
 
 }

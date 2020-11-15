@@ -34,22 +34,6 @@ import static org.kwrx.builder.interp.TokenType.*;
 
 public class Parser {
 
-    //    Markdown Grammar
-    //
-    //    blockquote :- ANGLE_BRACKET+ paragraph;
-    //
-    //    list :- list-element+ NEWLINE;
-    //    list-element :- DASH paragraph;
-    //    list-element :- NUMBER DOT paragraph;
-    //
-    //    code :- ESCAPE ESCAPE ESCAPE CONTENT+ ESCAPE ESCAPE ESCAPE;
-    //
-    //    image :- BANG LEFT_BRACE CONTENT+ RIGHT_BRACE LEFT_PAREN CONTENT RIGHT_PAREN;
-    //    image :- BANG LEFT_BRACE CONTENT+ RIGHT_BRACE LEFT_PAREN STRING RIGHT_PAREN;
-    //
-    //    url :- LEFT_BRACE CONTENT+ RIGHT_BRACE LEFT_PAREN CONTENT RIGHT_PAREN;
-    //    url :- LEFT_BRACE CONTENT+ RIGHT_BRACE LEFT_PAREN STRING RIGHT_PAREN;
-
 
     private final List<Token> tokens;
     private final List<Expression> expressions;
@@ -164,10 +148,10 @@ public class Parser {
 
             case STAR, UNDERSCORE -> {
 
-                if(matchNextTokens(STAR, STAR))
+                if(matchNextTokens(STAR, STAR) || matchNextTokens(UNDERSCORE, UNDERSCORE))
                     return new Text.BoldItalic("", parseTokensUntil(tokenType, tokenType, tokenType));
 
-                else if(matchNextTokens(STAR))
+                else if(matchNextTokens(STAR) || matchNextTokens(UNDERSCORE))
                     return new Text.Bold("", parseTokensUntil(tokenType, tokenType));
 
                 else
@@ -216,7 +200,7 @@ public class Parser {
 
                     Token url;
                     if((url = getNextToken()).getType() != STRING)
-                        throw new ParsingException(url, "missing URL for image");
+                        throw new ParsingException(url, "missing address for image");
 
                     if(!matchNextTokens(RIGHT_PAREN))
                         throw new ParsingException(url, "unclosed parenthesis for a image");
@@ -225,6 +209,41 @@ public class Parser {
                     return new ImageElement((String) title.getLiteral(), (String) url.getLiteral());
 
                 }
+            }
+
+            case LEFT_BRACE -> {
+
+                Token title;
+                if((title = getNextToken()).getType() != CONTENT)
+                    throw new ParsingException(title, "missing title for URL");
+
+                if(!matchNextTokens(RIGHT_BRACE, LEFT_PAREN))
+                    throw new ParsingException(title, "wrong syntax for URL");
+
+                Token url;
+                if((url = getNextToken()).getType() != STRING)
+                    throw new ParsingException(url, "missing address for URL");
+
+                if(!matchNextTokens(RIGHT_PAREN))
+                    throw new ParsingException(url, "unclosed parenthesis for a URL");
+
+
+                return new Text.URL((String) title.getLiteral(), (String) url.getLiteral());
+
+            }
+
+            case LEFT_PAREN -> {
+
+                Token url;
+                if((url = getNextToken()).getType() != STRING)
+                    throw new ParsingException(url, "missing address for URL");
+
+                if(!matchNextTokens(RIGHT_PAREN))
+                    throw new ParsingException(url, "unclosed parenthesis for a URL");
+
+
+                return new Text.URL((String) url.getLiteral(), (String) url.getLiteral());
+
             }
 
 

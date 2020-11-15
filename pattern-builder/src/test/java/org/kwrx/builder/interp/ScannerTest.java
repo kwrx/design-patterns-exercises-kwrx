@@ -25,18 +25,47 @@
 
 package org.kwrx.builder.interp;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.kwrx.shared.Resources;
 
-import static org.junit.Assert.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class ScannerTest {
 
+    private String sample;
+
+    @Before
+    public void setUp() throws Exception {
+        sample = Files.readString(Paths.get(Resources.getURL(this, "/samples/sample01.md").getPath()));
+    }
+
+
     @Test
-    public void ScannerTestWithSimpleCode() throws ScanningException {
+    public void ScannerTestWithSampleCode() throws ScanningException {
+        new Scanner(sample);
+    }
 
-        var scanner = new Scanner("### Hello World!");
-        System.out.println(scanner.getTokens());
+    @Test
+    public void ScannerTestWithSingleChars() throws ScanningException {
+        new Scanner("?%$£");
+    }
 
+    @Test
+    public void ScannerTestWithCarriageReturn() throws ScanningException {
+        new Scanner("\r");
+    }
+
+    @Test(expected = ScanningException.class)
+    public void ScannerTestWithWrongChars() throws ScanningException {
+        new Scanner("\uffff");
+    }
+
+    @Test(expected = ScanningException.class)
+    public void ScannerTestWithUnterminatedString() throws ScanningException {
+        new Scanner("\"Hello World\n");
     }
 
 }

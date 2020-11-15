@@ -30,6 +30,7 @@ public interface DocumentBuilder {
 
     DocumentBuilder save();
     DocumentBuilder restore();
+    DocumentBuilder withTextColor(String color);
     DocumentBuilder withTextSize(float textSize);
     DocumentBuilder withTextStyle(String style);
     DocumentBuilder withTextFont(String fontName);
@@ -38,7 +39,7 @@ public interface DocumentBuilder {
     DocumentBuilder withURL(String text);
     DocumentBuilder withListElementOrdered(int order);
     DocumentBuilder withListElementUnordered();
-    DocumentBuilder withBlockquote();
+    DocumentBuilder withBlockquote(int depth);
 
     Document build();
 

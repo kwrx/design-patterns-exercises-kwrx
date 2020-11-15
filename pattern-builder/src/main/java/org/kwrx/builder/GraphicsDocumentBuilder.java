@@ -67,6 +67,13 @@ public class GraphicsDocumentBuilder implements DocumentBuilder {
     }
 
     @Override
+    public DocumentBuilder withTextColor(String color) {
+        graphicsContext.setFill(Paint.valueOf(color));
+        graphicsContext.setStroke(Paint.valueOf(color));
+        return this;
+    }
+
+    @Override
     public DocumentBuilder withTextSize(float textSize) {
         graphicsContext.setFont(Font.font(graphicsContext.getFont().getFamily(), textSize));
         return this;
@@ -109,8 +116,8 @@ public class GraphicsDocumentBuilder implements DocumentBuilder {
             switch (s) {
 
                 case '\r' -> {}
-                case '\n' -> { currentY += computeCharSizeY(s); currentX = 0.; }
-                case '\t' -> { currentX += computeCharSizeX(s) * 2; }
+                case '\n' -> { currentY += computeCharSizeY(' '); currentX = 0.; }
+                case '\t' -> { currentX += computeCharSizeX(' ') * 4; }
 
                 default -> {
 
@@ -150,11 +157,14 @@ public class GraphicsDocumentBuilder implements DocumentBuilder {
     @Override
     public DocumentBuilder withURL(String text) {
 
-        graphicsContext.save();
-        withTextStyle("underscore");
-        withText(text);
-        graphicsContext.restore();
 
+        final var oldCurrentX = currentX;
+        final var oldCurrentY = currentY;
+
+        withTextColor("#33A");
+        withText(text);
+
+        graphicsContext.strokeLine(oldCurrentX, oldCurrentY + computeCharSizeY('!'), currentX, currentY + computeCharSizeY('!'));
         return this;
 
     }
@@ -170,8 +180,18 @@ public class GraphicsDocumentBuilder implements DocumentBuilder {
     }
 
     @Override
-    public DocumentBuilder withBlockquote() {
-        return withText("‖\t");
+    public DocumentBuilder withBlockquote(int depth) {
+
+        withTextColor("#777");
+
+        for(var i = 0; i < depth; i++)
+            withText("‖");
+
+        for(var i = 0; i < depth; i++)
+            withText("\t");
+
+        return this;
+
     }
 
     @Override
@@ -207,7 +227,7 @@ public class GraphicsDocumentBuilder implements DocumentBuilder {
             setTextAlignment(TextAlignment.LEFT);
         }};
 
-        return Math.ceil(text.getLayoutBounds().getHeight() / 2);
+        return Math.ceil(text.getLayoutBounds().getHeight());
 
     }
 

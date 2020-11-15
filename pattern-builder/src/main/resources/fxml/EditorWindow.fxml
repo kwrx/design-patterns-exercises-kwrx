@@ -30,18 +30,44 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.HBox?>
 <fx:root type="StackPane" xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          prefHeight="600.0" prefWidth="800.0">
 
 
     <BorderPane>
-        <left>
-            <TextArea prefWidth="550" fx:id="editorTextArea"/>
-        </left>
-        <right>
-            <StackPane prefWidth="600" fx:id="previewPane"/>
-        </right>
+        <center>
+            <SplitPane>
+                <TextArea fx:id="editorTextArea"/>
+                <VBox fx:id="previewPane" style="-fx-background-color: white">
+                    <padding>
+                        <Insets left="8" right="8" top="8" bottom="8"/>
+                    </padding>
+                </VBox>
+            </SplitPane>
+        </center>
+        <bottom>
+            <BorderPane>
+                <left>
+                    <HBox spacing="16">
+                        <ToggleButton fx:id="toggleViewMode" text="View Mode"/>
+                        <Label fx:id="textErrors" minHeight="24"/>
+                    </HBox>
+                </left>
+                <right>
+                    <Label fx:id="textInfo" minHeight="24"/>
+                </right>
+                <padding>
+                    <Insets left="8" right="8"/>
+                </padding>
+            </BorderPane>
+        </bottom>
     </BorderPane>
 
 

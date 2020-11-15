@@ -28,10 +28,15 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import org.kwrx.builder.*;
 import org.kwrx.builder.interp.ParsingException;
 import org.kwrx.builder.interp.ScanningException;
@@ -44,10 +49,20 @@ public class EditorWindow extends StackPane implements Initializable {
 
 
     @FXML
-    private StackPane previewPane;
+    private VBox previewPane;
 
     @FXML
     private TextArea editorTextArea;
+
+    @FXML
+    private Label textInfo;
+
+    @FXML
+    private Label textErrors;
+
+    @FXML
+    private ToggleButton toggleViewMode;
+
 
 
     public EditorWindow() {
@@ -57,21 +72,47 @@ public class EditorWindow extends StackPane implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        editorTextArea.textProperty().addListener(
+                (v, o, n) -> updatePreview(n));
 
-        editorTextArea.textProperty().addListener((v, o, n) -> {
-
-            try {
-
-                Document document = new DocumentDirector(new GraphicsDocumentBuilder())
-                        .parse(n + "!");
-
-                previewPane.getChildren().clear();
-                previewPane.getChildren().add((GraphicsDocument) document);
-
-            } catch (ParsingException | ScanningException ignored) { }
-
-        });
+        toggleViewMode.selectedProperty().addListener(
+                (v, o, n) -> updatePreview(editorTextArea.getText()));
 
     }
+
+
+    private void updatePreview(String source) {
+
+        try {
+
+            DocumentBuilder documentBuilder;
+
+            if(toggleViewMode.isSelected())
+                documentBuilder = new GraphicsDocumentBuilder();
+            else
+                documentBuilder = new ASCIIDocumentBuilder();
+
+
+            Document document = new DocumentDirector(documentBuilder)
+                    .parse(source);
+
+            previewPane.getChildren().clear();
+            previewPane.getChildren().add((Node) document);
+
+            textErrors.setText("");
+
+        } catch (ParsingException | ScanningException e) {
+            textErrors.setText(e.getMessage());
+        }
+
+
+        textInfo.setText(String.format("Lines: %d, Words: %d",
+                source.split("\n").length,
+                source.split("\\W+").length
+        ));
+
+    }
+
+
 
 }

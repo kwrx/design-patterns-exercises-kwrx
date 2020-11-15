@@ -67,6 +67,9 @@ public class DocumentDirector {
             else if(expr instanceof Text.BoldItalic)
                 documentBuilder.withTextStyle("bold-italic");
 
+            else if(expr instanceof Text.URL)
+                documentBuilder.withURL(((Text.URL) expr).getContent());
+
             else if(expr instanceof Text)
                 documentBuilder.withText(((Text) expr).getContent());
 
@@ -77,10 +80,11 @@ public class DocumentDirector {
                 documentBuilder.withListElementUnordered();
 
             else if(expr instanceof Blockquote)
-                documentBuilder.withBlockquote();
+                documentBuilder.withBlockquote(((Blockquote) expr).getDepth());
 
             else if(expr instanceof ImageElement)
                 documentBuilder.withImage(((ImageElement) expr).getTitle(), ((ImageElement) expr).getUrl());
+
 
 
             parseExpressions(expr.getExpressions());

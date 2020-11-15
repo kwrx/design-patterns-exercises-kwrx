@@ -27,6 +27,7 @@ package org.kwrx.builder.interp.expressions;
 
 import org.kwrx.builder.interp.Expression;
 
+import java.awt.*;
 import java.util.List;
 
 public class Text extends Expression {
@@ -96,6 +97,31 @@ public class Text extends Expression {
 
         public BoldItalic(String content, Expression... expressions) {
             super(content, expressions);
+        }
+
+    }
+
+    public static class URL extends Text {
+
+        private final String url;
+
+        public URL(String content, String url) {
+            super(content);
+            this.url = url;
+        }
+
+        public URL(String content, String url, List<Expression> expressions) {
+            super(content, expressions);
+            this.url = url;
+        }
+
+        public URL(String content, String url, Expression... expressions) {
+            super(content, expressions);
+            this.url = url;
+        }
+
+        public String getUrl() {
+            return url;
         }
 
     }
