@@ -153,7 +153,7 @@ public class Scanner {
             case '_' -> addToken(TokenType.UNDERSCORE, null);
             case '*' -> addToken(TokenType.STAR, null);
             case '#' -> addToken(TokenType.HASHTAG, null);
-            //case '`' -> addToken(TokenType.ESCAPE, null);
+            case '`' -> addToken(TokenType.ESCAPE, null);
             case '!' -> addToken(TokenType.BANG, null);
             case '>' -> addToken(TokenType.ANGLE_BRACKET, null);
 

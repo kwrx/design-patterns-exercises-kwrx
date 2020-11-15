@@ -70,6 +70,9 @@ public class DocumentDirector {
             else if(expr instanceof Text.URL)
                 documentBuilder.withURL(((Text.URL) expr).getContent());
 
+            else if(expr instanceof Text.Code)
+                documentBuilder.withTextFont("Monospace");
+
             else if(expr instanceof Text)
                 documentBuilder.withText(((Text) expr).getContent());
 

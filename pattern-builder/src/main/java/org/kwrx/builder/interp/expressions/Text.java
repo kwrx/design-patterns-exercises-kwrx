@@ -126,5 +126,20 @@ public class Text extends Expression {
 
     }
 
+    public static class Code extends Text {
+
+        public Code(String content) {
+            super(content);
+        }
+
+        public Code(String content, List<Expression> expressions) {
+            super(content, expressions);
+        }
+
+        public Code(String content, Expression... expressions) {
+            super(content, expressions);
+        }
+
+    }
 
 }

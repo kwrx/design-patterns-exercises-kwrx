@@ -160,6 +160,15 @@ public class Parser {
 
             }
 
+            case ESCAPE -> {
+
+                if(matchNextTokens(ESCAPE, ESCAPE))
+                    return new Text.Code("", parseTokensUntil(tokenType, tokenType, tokenType));
+                else
+                    return new Text("`");
+
+            }
+
             case ANGLE_BRACKET -> {
 
                 int depth = 1;

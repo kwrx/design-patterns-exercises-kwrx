@@ -1,4 +1,3 @@
-
 # Titolo 1
 ## Titolo 2
 ### Titolo 3
@@ -17,16 +16,20 @@ Testo di prova con un URL ("https://www.unical.it") oppure con [Link]("https://u
 2. Lista ordinata
 3. Lista ordinata
 
-
 ##### Esempio di immagine
 
 ![Pumpkin]("file:///home/antonio/Scaricati/pumpkin.png")
 
+##### Esempio di codice
+```
+	def main:
+	 return True
+```
 ##### Esempio di Blockquote
 
 > Lorem ipsum dolor sit amet...
 > blablablaaaa!
 >> nested **blockquote** with a text.
 
-### __Hello World!!!__.
+
 
