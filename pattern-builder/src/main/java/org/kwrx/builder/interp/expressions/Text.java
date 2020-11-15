@@ -27,7 +27,6 @@ package org.kwrx.builder.interp.expressions;
 
 import org.kwrx.builder.interp.Expression;
 
-import java.awt.*;
 import java.util.List;
 
 public class Text extends Expression {

@@ -27,8 +27,6 @@ package org.kwrx.builder.interp.expressions;
 
 import org.kwrx.builder.interp.Expression;
 
-import java.util.List;
-
 public class ImageElement extends Expression {
 
     private final String title;

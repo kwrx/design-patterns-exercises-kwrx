@@ -26,7 +26,6 @@
 package org.kwrx.builder;
 
 import javafx.geometry.VPos;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;

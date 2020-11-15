@@ -28,6 +28,7 @@ package org.kwrx.shared;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.text.Font;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -124,6 +125,11 @@ public final class Resources {
 
         return requireNonNull(url);
 
+    }
+
+
+    public static void getFont(Object parent, String resource) {
+        Font.loadFont(Resources.getURL(parent, resource).toExternalForm(), 12);
     }
 
 

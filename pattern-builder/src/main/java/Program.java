@@ -40,8 +40,8 @@ public class Program extends Application {
         primaryStage.setScene(new Scene(new EditorWindow()));
         primaryStage.setTitle("Markdown Editor - Builder");
         primaryStage.setWidth(1200);
-        primaryStage.setHeight(800);
-        primaryStage.setResizable(false);
+        primaryStage.setHeight(600);
+        primaryStage.setResizable(true);
         primaryStage.centerOnScreen();
 
         primaryStage.show();

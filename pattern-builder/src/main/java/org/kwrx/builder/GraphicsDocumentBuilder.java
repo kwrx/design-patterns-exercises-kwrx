@@ -30,11 +30,13 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.*;
+import org.kwrx.shared.Resources;
 
 public class GraphicsDocumentBuilder implements DocumentBuilder {
 
     private final GraphicsDocument graphicsDocument;
     private final GraphicsContext graphicsContext;
+    private final Font defaultFont;
 
     private double currentX = 0.;
     private double currentY = 0.;
@@ -51,6 +53,16 @@ public class GraphicsDocumentBuilder implements DocumentBuilder {
         graphicsContext.setFill(Paint.valueOf("#000"));
         graphicsContext.setTextBaseline(VPos.TOP);
 
+
+        Resources.getFont(this, "/font/segoeui.ttf");
+        Resources.getFont(this, "/font/segoeuib.ttf");
+        Resources.getFont(this, "/font/segoeuii.ttf");
+
+        defaultFont = Font.getFontNames().contains("Segoe UI")
+                ? Font.font("Segoe UI")
+                : Font.getDefault();
+
+        graphicsContext.setFont(defaultFont);
 
     }
 
@@ -90,7 +102,7 @@ public class GraphicsDocumentBuilder implements DocumentBuilder {
             case "bold"         -> font = Font.font(graphicsContext.getFont().getFamily(), FontWeight.BOLD, graphicsContext.getFont().getSize());
             case "bold-italic"  -> font = Font.font(graphicsContext.getFont().getFamily(), FontWeight.BOLD, FontPosture.ITALIC, graphicsContext.getFont().getSize());
 
-            default -> font = Font.getDefault();
+            default -> font = defaultFont;
 
         }
 
@@ -128,6 +140,9 @@ public class GraphicsDocumentBuilder implements DocumentBuilder {
                 }
 
             }
+
+            if(currentY + 128 > graphicsDocument.getHeight())
+                graphicsDocument.setHeight(currentY + 128);
 
         }
 

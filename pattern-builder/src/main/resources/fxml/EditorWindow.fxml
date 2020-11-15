@@ -26,16 +26,9 @@
   -->
 
 
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <fx:root type="StackPane" xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          prefHeight="600.0" prefWidth="800.0">
@@ -45,11 +38,13 @@
         <center>
             <SplitPane>
                 <TextArea fx:id="editorTextArea"/>
-                <VBox fx:id="previewPane" style="-fx-background-color: white">
-                    <padding>
-                        <Insets left="8" right="8" top="8" bottom="8"/>
-                    </padding>
-                </VBox>
+                <ScrollPane hbarPolicy="NEVER" fitToHeight="true" fitToWidth="true" prefWidth="200" prefHeight="200">
+                    <VBox fx:id="previewPane" style="-fx-background-color: white">
+                        <padding>
+                            <Insets left="8" right="8" top="8" bottom="8"/>
+                        </padding>
+                    </VBox>
+                </ScrollPane>
             </SplitPane>
         </center>
         <bottom>

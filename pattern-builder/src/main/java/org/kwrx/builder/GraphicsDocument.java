@@ -26,14 +26,12 @@
 package org.kwrx.builder;
 
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 
 public class GraphicsDocument extends Canvas implements Document {
 
     public GraphicsDocument() {
         setWidth(600.0);
-        setHeight(730.0);
+        setHeight(200.0);
     }
 
 }

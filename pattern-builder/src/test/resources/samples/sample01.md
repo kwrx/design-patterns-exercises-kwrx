@@ -4,17 +4,17 @@
 #### Titolo 4
 ##### Titolo 5
 
-Testo di prova con il **grassetto**
+Testo di prova con il *corsivo*, il **grassetto** e il ***grassetto/corsivo***.
 
-- Lista non ordinata 1
-- Lista non ordinata 2
-- Lista non ordinata 3
+- Lista *non ordinata* 1
+- Lista *non ordinata* 2
+- Lista *non ordinata* 3
 
 Testo di prova con un URL ("https://www.unical.it") oppure con [Link]("https://unical.it")
 
-1. Lista ordinata
-2. Lista ordinata
-3. Lista ordinata
+1. Lista *ordinata* 1
+2. Lista *ordinata* 2
+3. Lista *ordinata* 3
 
 ##### Esempio di immagine
 
@@ -22,8 +22,10 @@ Testo di prova con un URL ("https://www.unical.it") oppure con [Link]("https://u
 
 ##### Esempio di codice
 ```
-	def main:
-	 return True
+  from threading import Thread, Lock
+
+  def main:
+    return True
 ```
 ##### Esempio di Blockquote
 
