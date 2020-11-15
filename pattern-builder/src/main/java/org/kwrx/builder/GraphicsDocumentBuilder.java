@@ -57,6 +57,7 @@ public class GraphicsDocumentBuilder implements DocumentBuilder {
         Resources.getFont(this, "/font/segoeui.ttf");
         Resources.getFont(this, "/font/segoeuib.ttf");
         Resources.getFont(this, "/font/segoeuii.ttf");
+        Resources.getFont(this, "/font/segoeuiz.ttf");
 
         defaultFont = Font.getFontNames().contains("Segoe UI")
                 ? Font.font("Segoe UI")

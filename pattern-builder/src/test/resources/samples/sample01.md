@@ -32,3 +32,9 @@ Testo di prova con un URL ("https://www.unical.it") oppure con [Link]("https://u
 > Lorem ipsum dolor sit amet...
 > blablablaaaa!
 >> nested **blockquote** with a text.
+
+
+`*Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud...*`
+
+#### **FINE**.
