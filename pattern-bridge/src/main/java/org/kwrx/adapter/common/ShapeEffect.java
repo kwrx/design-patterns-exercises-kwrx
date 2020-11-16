@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,12 +23,10 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.adapter.common;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
+import javafx.scene.canvas.GraphicsContext;
+
+public interface ShapeEffect {
+    void apply(GraphicsContext graphicsContext);
+}

@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,12 +23,17 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.adapter;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Reflection;
+import org.kwrx.adapter.common.ShapeEffect;
+
+public class EffectReflection implements ShapeEffect {
+
+    @Override
+    public void apply(GraphicsContext graphicsContext) {
+        graphicsContext.setEffect(new Reflection(10, 0.5, 0.8, 0.0));
+    }
+
+}

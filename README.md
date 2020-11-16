@@ -11,7 +11,7 @@
 
 ### Structural
 
-- [ ] Bridge
+- [x] Bridge
 - [ ] Adapter
 
 
@@ -25,7 +25,9 @@
 # ├── pattern-abstract-method
 # ├── pattern-builder
 # ├── pattern-prototype
-# └── pattern-singleton
+# ├── pattern-singleton
+# ├── pattern-bridge
+# └── pattern-adapter
 ```
 
 

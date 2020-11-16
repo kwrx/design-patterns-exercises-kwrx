@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,12 +23,17 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.adapter;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Paint;
+import org.kwrx.adapter.common.ShapeColor;
+
+public class ColorGreen implements ShapeColor {
+
+    @Override
+    public void apply(GraphicsContext graphicsContext) {
+        graphicsContext.setFill(Paint.valueOf("#2A2"));
+    }
+
+}

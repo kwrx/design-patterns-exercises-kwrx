@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2020 Antonino Natale
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  ~
+  -->
+
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         prefHeight="600.0" prefWidth="800.0">
+
+
+    <BorderPane>
+        <top>
+            <HBox spacing="16">
+
+                <Label text="Shape: " minHeight="24"/>
+                <ComboBox fx:id="comboShape">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Rectangle"/>
+                            <String fx:value="Circle"/>
+                        </FXCollections>
+                    </items>
+                    <value>
+                        <String fx:value="Rectangle"/>
+                    </value>
+                </ComboBox>
+                <Separator orientation="VERTICAL" />
+
+                <Label text="Color: " minHeight="24"/>
+                <ComboBox fx:id="comboColor">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Blue"/>
+                            <String fx:value="Red"/>
+                            <String fx:value="Green"/>
+                        </FXCollections>
+                    </items>
+                    <value>
+                        <String fx:value="Blue"/>
+                    </value>
+                </ComboBox>
+                <Separator orientation="VERTICAL" />
+
+                <Label text="Effect: " minHeight="24"/>
+                <ComboBox fx:id="comboEffect">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="None"/>
+                            <String fx:value="DropShadow"/>
+                            <String fx:value="InnerShadow"/>
+                            <String fx:value="Reflection"/>
+                        </FXCollections>
+                    </items>
+                    <value>
+                        <String fx:value="None"/>
+                    </value>
+                </ComboBox>
+
+                <padding>
+                    <Insets top="8" left="8" bottom="8" right="8" />
+                </padding>
+
+            </HBox>
+        </top>
+        <center>
+            <AnchorPane>
+                <Canvas AnchorPane.topAnchor="0"
+                        AnchorPane.bottomAnchor="0"
+                        AnchorPane.leftAnchor="0"
+                        AnchorPane.rightAnchor="0" fx:id="canvas" width="800" height="530" />
+            </AnchorPane>
+        </center>
+    </BorderPane>
+
+</fx:root>

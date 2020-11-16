@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,12 +23,28 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.adapter;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.shape.ArcType;
+import org.kwrx.adapter.common.Shape;
+import org.kwrx.adapter.common.ShapeColor;
+import org.kwrx.adapter.common.ShapeEffect;
+
+public class Circle extends Shape {
+
+    public Circle(ShapeColor shapeColor, ShapeEffect shapeEffect) {
+        super(shapeColor, shapeEffect);
+    }
+
+    @Override
+    public void draw(GraphicsContext graphicsContext, double x, double y) {
+
+        getShapeColor().apply(graphicsContext);
+        getShapeEffect().apply(graphicsContext);
+
+        graphicsContext.fillArc(x, y, 100, 100, 0, 360, ArcType.ROUND);
+
+    }
+
+}
