@@ -23,10 +23,26 @@
  *
  */
 
-package org.kwrx.adapter.common;
+package org.kwrx.bridge;
 
 import javafx.scene.canvas.GraphicsContext;
+import org.kwrx.bridge.common.Shape;
+import org.kwrx.bridge.common.ShapeColor;
+import org.kwrx.bridge.common.ShapeEffect;
 
-public interface ShapeEffect {
-    void apply(GraphicsContext graphicsContext);
+public class Rect extends Shape {
+
+    public Rect(ShapeColor shapeColor, ShapeEffect shapeEffect) {
+        super(shapeColor, shapeEffect);
+    }
+
+    @Override
+    public void draw(GraphicsContext graphicsContext, double x, double y) {
+
+        getShapeColor().apply(graphicsContext);
+        getShapeEffect().apply(graphicsContext);
+
+        graphicsContext.fillRect(x, y, 100, 100);
+
+    }
 }

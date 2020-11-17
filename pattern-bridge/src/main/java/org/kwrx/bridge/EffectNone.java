@@ -23,10 +23,10 @@
  *
  */
 
-package org.kwrx.adapter;
+package org.kwrx.bridge;
 
 import javafx.scene.canvas.GraphicsContext;
-import org.kwrx.adapter.common.ShapeEffect;
+import org.kwrx.bridge.common.ShapeEffect;
 
 public class EffectNone implements ShapeEffect {
 

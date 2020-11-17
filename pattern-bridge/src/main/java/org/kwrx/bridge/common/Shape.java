@@ -23,17 +23,30 @@
  *
  */
 
-package org.kwrx.adapter;
+package org.kwrx.bridge.common;
+
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Paint;
-import org.kwrx.adapter.common.ShapeColor;
 
-public class ColorGreen implements ShapeColor {
+public abstract class Shape {
 
-    @Override
-    public void apply(GraphicsContext graphicsContext) {
-        graphicsContext.setFill(Paint.valueOf("#2A2"));
+    private final ShapeColor shapeColor;
+    private final ShapeEffect shapeEffect;
+
+    public Shape(ShapeColor shapeColor, ShapeEffect shapeEffect) {
+        this.shapeColor = shapeColor;
+        this.shapeEffect = shapeEffect;
     }
+
+    public ShapeColor getShapeColor() {
+        return shapeColor;
+    }
+
+    public ShapeEffect getShapeEffect() {
+        return shapeEffect;
+    }
+
+
+    public abstract void draw(GraphicsContext context, double x, double y);
 
 }

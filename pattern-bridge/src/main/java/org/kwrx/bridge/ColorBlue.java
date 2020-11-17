@@ -23,17 +23,17 @@
  *
  */
 
-package org.kwrx.adapter;
+package org.kwrx.bridge;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
-import org.kwrx.adapter.common.ShapeColor;
+import org.kwrx.bridge.common.ShapeColor;
 
-public class ColorRed implements ShapeColor {
+public class ColorBlue implements ShapeColor {
 
     @Override
     public void apply(GraphicsContext graphicsContext) {
-        graphicsContext.setFill(Paint.valueOf("#A22"));
+        graphicsContext.setFill(Paint.valueOf("#22A"));
     }
 
 }

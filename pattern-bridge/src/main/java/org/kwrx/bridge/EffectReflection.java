@@ -23,30 +23,17 @@
  *
  */
 
-package org.kwrx.adapter.common;
-
+package org.kwrx.bridge;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Reflection;
+import org.kwrx.bridge.common.ShapeEffect;
 
-public abstract class Shape {
+public class EffectReflection implements ShapeEffect {
 
-    private final ShapeColor shapeColor;
-    private final ShapeEffect shapeEffect;
-
-    public Shape(ShapeColor shapeColor, ShapeEffect shapeEffect) {
-        this.shapeColor = shapeColor;
-        this.shapeEffect = shapeEffect;
+    @Override
+    public void apply(GraphicsContext graphicsContext) {
+        graphicsContext.setEffect(new Reflection(10, 0.5, 0.8, 0.0));
     }
-
-    public ShapeColor getShapeColor() {
-        return shapeColor;
-    }
-
-    public ShapeEffect getShapeEffect() {
-        return shapeEffect;
-    }
-
-
-    public abstract void draw(GraphicsContext context, double x, double y);
 
 }

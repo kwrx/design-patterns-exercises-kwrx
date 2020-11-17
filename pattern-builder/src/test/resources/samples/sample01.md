@@ -18,7 +18,7 @@ Testo di prova con un URL ("https://www.unical.it") oppure con [Link]("https://u
 
 ##### Esempio di immagine
 
-![Pumpkin]("file:///home/antonio/Scaricati/pumpkin.png")
+![Pumpkin]("file:///home/antonio/Scaricati/black-cat.png")
 
 ##### Esempio di codice
 ```

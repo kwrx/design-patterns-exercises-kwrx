@@ -23,10 +23,18 @@
  *
  */
 
-package org.kwrx.adapter.common;
+package org.kwrx.bridge;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import org.kwrx.bridge.common.ShapeEffect;
 
-public interface ShapeColor {
-    void apply(GraphicsContext graphicsContext);
+public class EffectInnerShadow implements ShapeEffect {
+
+    @Override
+    public void apply(GraphicsContext graphicsContext) {
+        graphicsContext.setEffect(new javafx.scene.effect.InnerShadow(10, Color.BLACK));
+    }
+
 }
+

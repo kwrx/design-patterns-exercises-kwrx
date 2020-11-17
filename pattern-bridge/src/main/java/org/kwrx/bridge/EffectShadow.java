@@ -23,17 +23,18 @@
  *
  */
 
-package org.kwrx.adapter;
+package org.kwrx.bridge;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Paint;
-import org.kwrx.adapter.common.ShapeColor;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.paint.Color;
+import org.kwrx.bridge.common.ShapeEffect;
 
-public class ColorBlue implements ShapeColor {
+public class EffectShadow implements ShapeEffect {
 
     @Override
     public void apply(GraphicsContext graphicsContext) {
-        graphicsContext.setFill(Paint.valueOf("#22A"));
+        graphicsContext.setEffect(new DropShadow(10, Color.BLACK));
     }
 
 }

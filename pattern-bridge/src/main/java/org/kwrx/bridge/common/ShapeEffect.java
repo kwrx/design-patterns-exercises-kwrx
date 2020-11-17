@@ -23,17 +23,10 @@
  *
  */
 
-package org.kwrx.adapter;
+package org.kwrx.bridge.common;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.Reflection;
-import org.kwrx.adapter.common.ShapeEffect;
 
-public class EffectReflection implements ShapeEffect {
-
-    @Override
-    public void apply(GraphicsContext graphicsContext) {
-        graphicsContext.setEffect(new Reflection(10, 0.5, 0.8, 0.0));
-    }
-
+public interface ShapeEffect {
+    void apply(GraphicsContext graphicsContext);
 }

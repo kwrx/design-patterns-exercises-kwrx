@@ -23,18 +23,28 @@
  *
  */
 
-package org.kwrx.adapter;
+package org.kwrx.bridge;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import org.kwrx.adapter.common.ShapeEffect;
+import javafx.scene.shape.ArcType;
+import org.kwrx.bridge.common.Shape;
+import org.kwrx.bridge.common.ShapeColor;
+import org.kwrx.bridge.common.ShapeEffect;
 
-public class EffectInnerShadow implements ShapeEffect {
+public class Circle extends Shape {
+
+    public Circle(ShapeColor shapeColor, ShapeEffect shapeEffect) {
+        super(shapeColor, shapeEffect);
+    }
 
     @Override
-    public void apply(GraphicsContext graphicsContext) {
-        graphicsContext.setEffect(new javafx.scene.effect.InnerShadow(10, Color.BLACK));
+    public void draw(GraphicsContext graphicsContext, double x, double y) {
+
+        getShapeColor().apply(graphicsContext);
+        getShapeEffect().apply(graphicsContext);
+
+        graphicsContext.fillArc(x, y, 100, 100, 0, 360, ArcType.ROUND);
+
     }
 
 }
-

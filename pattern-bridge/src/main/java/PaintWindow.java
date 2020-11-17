@@ -27,14 +27,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import org.kwrx.adapter.*;
-import org.kwrx.adapter.common.Shape;
-import org.kwrx.adapter.common.ShapeColor;
-import org.kwrx.adapter.common.ShapeEffect;
+import org.kwrx.bridge.*;
+import org.kwrx.bridge.common.Shape;
+import org.kwrx.bridge.common.ShapeColor;
+import org.kwrx.bridge.common.ShapeEffect;
 import org.kwrx.shared.Resources;
-
 
 import java.net.URL;
 import java.util.ResourceBundle;
