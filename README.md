@@ -12,9 +12,13 @@
 ### Structural
 
 - [x] Bridge
-- [ ] Adapter
-
-
+- [x] Adapter
+- [ ] Composite
+- [ ] Decorator
+- [ ] Facade
+- [ ] Flyweight
+- [ ] Proxy
+ 
 ## Build
 
 ```bash

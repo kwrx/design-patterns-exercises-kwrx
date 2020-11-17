@@ -37,11 +37,11 @@ public class Program extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        primaryStage.setScene(new Scene(new PaintWindow()));
-        primaryStage.setTitle("Paint - Bridge");
+        primaryStage.setScene(new Scene(new BrowserWindow()));
+        primaryStage.setTitle("Browser - Adapter");
         primaryStage.setWidth(800);
         primaryStage.setHeight(600);
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
         primaryStage.centerOnScreen();
 
         primaryStage.show();

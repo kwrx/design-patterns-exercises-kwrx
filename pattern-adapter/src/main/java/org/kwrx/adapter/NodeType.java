@@ -23,29 +23,9 @@
  *
  */
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+package org.kwrx.adapter;
 
-
-public class Program extends Application {
-
-    public static void main(String... args) {
-        Application.launch(Program.class, args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-
-        primaryStage.setScene(new Scene(new PaintWindow()));
-        primaryStage.setTitle("Paint - Bridge");
-        primaryStage.setWidth(800);
-        primaryStage.setHeight(600);
-        primaryStage.setResizable(false);
-        primaryStage.centerOnScreen();
-
-        primaryStage.show();
-
-    }
-
+public enum NodeType {
+    DIRECTORY,
+    FILE,
 }
