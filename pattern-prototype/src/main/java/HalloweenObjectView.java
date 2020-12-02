@@ -33,7 +33,7 @@ import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
-import org.kwrx.prototype.HalloweenObjectPrototype;
+import org.kwrx.visitor.HalloweenObjectPrototype;
 
 public class HalloweenObjectView extends ImageView {
 

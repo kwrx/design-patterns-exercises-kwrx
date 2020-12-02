@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,14 +23,29 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
-include 'pattern-adapter'
-include 'pattern-visitor'
+
+public class Program extends Application {
+
+    public static void main(String... args) {
+        Application.launch(Program.class, args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+        //primaryStage.setScene(new Scene(new HalloweenWindow()));
+        primaryStage.setTitle("Interpreter Visitor");
+        primaryStage.setWidth(800);
+        primaryStage.setHeight(600);
+        primaryStage.setResizable(false);
+        primaryStage.centerOnScreen();
+
+        primaryStage.show();
+
+    }
+
+}

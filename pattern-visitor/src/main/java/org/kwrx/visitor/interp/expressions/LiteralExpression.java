@@ -23,15 +23,24 @@
  *
  */
 
-package org.kwrx.prototype;
+package org.kwrx.visitor.interp.expressions;
 
+import org.kwrx.visitor.interp.Expression;
 
-import javafx.scene.image.Image;
-import org.kwrx.shared.Resources;
+public class LiteralExpression extends Expression {
 
+    private final Object literal;
 
-public class BlackCat extends HalloweenObjectPrototype {
-    public BlackCat() {
-        setImage(new Image(Resources.getURL(this, "/assets/images/blackcat.png").toExternalForm()));
+    public LiteralExpression(Object literal) {
+        this.literal = literal;
+    }
+
+    public Object getLiteral() {
+        return literal;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visitLiteralExpression(this);
     }
 }

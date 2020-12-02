@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,14 +23,26 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.visitor.interp.statements;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
-include 'pattern-adapter'
-include 'pattern-visitor'
+import org.kwrx.visitor.interp.Statement;
+import java.util.List;
+
+public class BlockStatement extends Statement {
+
+    private final List<Statement> statements;
+
+    public BlockStatement(List<Statement> statements) {
+        this.statements = statements;
+    }
+
+    public List<Statement> getStatements() {
+        return statements;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visitBlock(this);
+    }
+
+}

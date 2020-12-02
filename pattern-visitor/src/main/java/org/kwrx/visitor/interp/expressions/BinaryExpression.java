@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,14 +23,37 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.visitor.interp.expressions;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
-include 'pattern-adapter'
-include 'pattern-visitor'
+import org.kwrx.visitor.interp.Expression;
+import org.kwrx.visitor.Token;
+
+public class BinaryExpression extends Expression {
+
+    private final Expression left;
+    private final Expression right;
+    private final Token operator;
+
+    public BinaryExpression(Expression left, Token operator, Expression right) {
+        this.left = left;
+        this.right = right;
+        this.operator = operator;
+    }
+
+    public Expression getLeft() {
+        return left;
+    }
+
+    public Expression getRight() {
+        return right;
+    }
+
+    public Token getOperator() {
+        return operator;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visitBinaryExpression(this);
+    }
+}

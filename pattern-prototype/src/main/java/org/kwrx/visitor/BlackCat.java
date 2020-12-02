@@ -23,14 +23,15 @@
  *
  */
 
-package org.kwrx.prototype;
+package org.kwrx.visitor;
+
 
 import javafx.scene.image.Image;
 import org.kwrx.shared.Resources;
 
 
-public class Pumpkin extends HalloweenObjectPrototype {
-    public Pumpkin() {
-        setImage(new Image(Resources.getURL(this, "/assets/images/pumpkin.png").toExternalForm()));
+public class BlackCat extends HalloweenObjectPrototype {
+    public BlackCat() {
+        setImage(new Image(Resources.getURL(this, "/assets/images/blackcat.png").toExternalForm()));
     }
 }

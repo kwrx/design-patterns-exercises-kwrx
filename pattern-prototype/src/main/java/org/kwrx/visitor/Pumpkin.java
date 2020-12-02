@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,14 +23,14 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.visitor;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
-include 'pattern-adapter'
-include 'pattern-visitor'
+import javafx.scene.image.Image;
+import org.kwrx.shared.Resources;
+
+
+public class Pumpkin extends HalloweenObjectPrototype {
+    public Pumpkin() {
+        setImage(new Image(Resources.getURL(this, "/assets/images/pumpkin.png").toExternalForm()));
+    }
+}

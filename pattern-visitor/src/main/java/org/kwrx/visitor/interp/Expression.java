@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,14 +23,31 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.visitor.interp;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
-include 'pattern-adapter'
-include 'pattern-visitor'
+import org.kwrx.visitor.interp.expressions.BinaryExpression;
+import org.kwrx.visitor.interp.expressions.GroupingExpression;
+import org.kwrx.visitor.interp.expressions.LiteralExpression;
+import org.kwrx.visitor.interp.expressions.UnaryExpression;
+
+public abstract class Expression {
+
+    public interface Visitor<T> {
+        //T visitAssignExpression(AssignExpression e);
+        T visitBinaryExpression(BinaryExpression e);
+        //T visitCallExpression(AssignExpression e);
+        //T visitGetExpression(AssignExpression e);
+        T visitGroupingExpression(GroupingExpression e);
+        T visitLiteralExpression(LiteralExpression e);
+        //T visitLogicalExpression(AssignExpression e);
+        //T visitSetExpression(AssignExpression e);
+        //T visitSuperExpression(AssignExpression e);
+        //T visitThisExpression(AssignExpression e);
+        T visitUnaryExpression(UnaryExpression e);
+        //T visitVariableExpression(AssignExpression e);
+    }
+
+
+    public abstract <T> T accept(Expression.Visitor<T> visitor);
+
+}

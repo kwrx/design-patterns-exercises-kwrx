@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,14 +23,18 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.visitor.interp;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
-include 'pattern-adapter'
-include 'pattern-visitor'
+import org.kwrx.visitor.interp.statements.BlockStatement;
+import org.kwrx.visitor.interp.statements.ExpressionStatement;
+
+public abstract class Statement {
+
+    public interface Visitor<T> {
+        T visitBlock(BlockStatement statement);
+        T visitExpression(ExpressionStatement statement);
+    }
+
+    public abstract <T> T accept(Statement.Visitor<T> visitor);
+
+}

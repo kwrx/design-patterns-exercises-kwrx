@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,14 +23,56 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.visitor;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
-include 'pattern-adapter'
-include 'pattern-visitor'
+public enum TokenType {
+
+    LEFT_PAREN,
+    LEFT_BRACE,
+    RIGHT_PAREN,
+    RIGHT_BRACE,
+
+    COMMA,
+    DOT,
+    SEMICOLON,
+
+    MINUS,
+    PLUS,
+    STAR,
+    SLASH,
+
+    BANG,
+    BANG_EQUAL,
+    EQUAL,
+    EQUAL_EQUAL,
+    GREATER, GREATER_EQUAL,
+    LESS, LESS_EQUAL,
+
+    IDENTIFIER,
+    STRING,
+    NUMBER,
+
+    AND,
+    OR,
+
+    CLASS,
+    EXTENDS,
+    THIS,
+    SUPER,
+    FUN,
+    VAR,
+
+    IF,
+    ELSE,
+    FOR,
+    WHILE,
+    BREAK,
+    RETURN,
+
+    TRUE,
+    FALSE,
+    NIL,
+
+    EOF,
+
+}

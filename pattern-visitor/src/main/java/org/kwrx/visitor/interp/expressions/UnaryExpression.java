@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,14 +23,32 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.visitor.interp.expressions;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
-include 'pattern-adapter'
-include 'pattern-visitor'
+import org.kwrx.visitor.interp.Expression;
+import org.kwrx.visitor.Token;
+
+public class UnaryExpression extends Expression {
+
+    private final Token operator;
+    private final Expression right;
+
+    public UnaryExpression(Token operator, Expression right) {
+        this.operator = operator;
+        this.right = right;
+    }
+
+    public Token getOperator() {
+        return operator;
+    }
+
+    public Expression getRight() {
+        return right;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visitUnaryExpression(this);
+    }
+
+}

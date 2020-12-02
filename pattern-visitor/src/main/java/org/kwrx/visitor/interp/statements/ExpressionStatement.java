@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,14 +23,25 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.visitor.interp.statements;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
-include 'pattern-adapter'
-include 'pattern-visitor'
+import org.kwrx.visitor.interp.Expression;
+import org.kwrx.visitor.interp.Statement;
+
+public class ExpressionStatement extends Statement {
+
+    private final Expression expression;
+
+    public ExpressionStatement(Expression expression) {
+        this.expression = expression;
+    }
+
+    public Expression getExpression() {
+        return expression;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visitExpression(this);
+    }
+}
