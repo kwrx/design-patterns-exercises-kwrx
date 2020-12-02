@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,33 +23,24 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
+package org.kwrx.visitor;
+
+public class RunningException extends RuntimeException {
+
+    private final String message;
+
+    public RunningException(Token token) {
+        this.message = String.format("Runtime Exception: %s at line %d, column %d%n", token.getLexeme(), token.getLine(), token.getColumn());
+    }
+
+    public RunningException(Token token, String message) {
+        this.message = String.format("Runtime Exception: %s: '%s' at line %d, column %d%n", token.getLexeme(), message, token.getLine(), token.getColumn());
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
 }
 
-
-group = 'org.kwrx.visitor'
-version = '1.0'
-
-sourceCompatibility = 15
-targetCompatibility = 15
-
-mainClassName = 'Program'
-
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation project(':shared')
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
-
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
-}

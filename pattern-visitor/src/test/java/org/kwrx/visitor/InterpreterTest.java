@@ -36,31 +36,37 @@ import org.kwrx.visitor.interp.statements.ExpressionStatement;
 public class InterpreterTest {
 
     @Test
-    public void simpleExpressionsTest() {
-
-        Expression e = new BinaryExpression(
-                new UnaryExpression(
-                        new Token(TokenType.MINUS, "-", null, 1, 1),
-                        new LiteralExpression(30.0)
-                ),
-                new Token(TokenType.STAR, "*", null, 1, 4),
-                new GroupingExpression(
-                        new LiteralExpression(2.5)
-                )
-        );
-
-        //System.out.println(new Interpreter(e));
-
-    }
-
-    @Test
     public void simpleCodeTest() throws ScanningException, ParsingException {
 
-        Scanner scanner = new Scanner("2 * ((5 - 3) + -10) + 5;");
+        Scanner scanner = new Scanner(
+                """
+                            var a = 1;
+                            var b;
+                            {
+                                var a = a + 2;
+                                b = a;
+                            }
+                            
+                            if(b > 5)
+                                a = 2;
+                            else {
+                                a = b;
+                                b = 10;
+                            }
+                        """
+        );
+
         Parser parser = new Parser(scanner);
+        RunningContext context = new Interpreter(parser.parse()).execute();
 
-        System.out.println(new Interpreter(parser.parse()));
 
+        System.out.println("Running context dump:");
+
+        for(var v : context.getVariables().keySet())
+            System.out.printf("var %s = %s%n", v, context.getVariables().get(v));
+
+        for(var v : context.getFunctions().keySet())
+            System.out.printf("fun %s = %s%n", v, context.getFunctions().get(v));
 
     }
 

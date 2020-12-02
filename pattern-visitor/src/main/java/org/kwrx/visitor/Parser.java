@@ -27,11 +27,11 @@ package org.kwrx.visitor;
 
 import org.kwrx.visitor.interp.Expression;
 import org.kwrx.visitor.interp.Statement;
-import org.kwrx.visitor.interp.expressions.BinaryExpression;
-import org.kwrx.visitor.interp.expressions.GroupingExpression;
-import org.kwrx.visitor.interp.expressions.LiteralExpression;
-import org.kwrx.visitor.interp.expressions.UnaryExpression;
+import org.kwrx.visitor.interp.expressions.*;
+import org.kwrx.visitor.interp.statements.BlockStatement;
 import org.kwrx.visitor.interp.statements.ExpressionStatement;
+import org.kwrx.visitor.interp.statements.IfStatement;
+import org.kwrx.visitor.interp.statements.VariableStatement;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -105,7 +105,24 @@ public class Parser {
 
 
     private Expression parseExpression() throws ParsingException {
-        return parseEquality();
+        return parseAssignment();
+    }
+
+    private Expression parseAssignment() throws ParsingException {
+
+        Expression left = parseEquality();
+
+        if(matchNextTokens(TokenType.EQUAL)) {
+
+            if(left instanceof VariableExpression)
+                return new AssignExpression(((VariableExpression) left).getName(), parseAssignment());
+            else
+                throw new ParsingException(getPreviousToken(), "expected a valid variable name");
+
+        }
+
+        return left;
+
     }
 
     private Expression parseEquality() throws ParsingException {
@@ -186,6 +203,7 @@ public class Parser {
             case FALSE -> new LiteralExpression(false);
             case NIL   -> new LiteralExpression(null);
             case NUMBER, STRING -> new LiteralExpression(getPreviousToken().getLiteral());
+            case IDENTIFIER -> new VariableExpression(getPreviousToken());
 
             default -> throw new ParsingException(getPreviousToken(), "expected a valid expression");
 
@@ -207,11 +225,62 @@ public class Parser {
 
     }
 
+    private Statement parseVariableStatement() throws ParsingException {
+
+        checkSyntax(TokenType.IDENTIFIER, "expected variable name in declaration");
+
+        Token name = getPreviousToken();
+        Expression constructor = null;
+
+        if(matchNextTokens(TokenType.EQUAL))
+            constructor = parseExpression();
+
+        checkSyntax(TokenType.SEMICOLON, "expected ';' after an expression");
+        return new VariableStatement(name, constructor);
+
+    }
+
+    private IfStatement parseIfStatement() throws ParsingException {
+
+        checkSyntax(TokenType.LEFT_PAREN, "expected '(' in a if statement");
+        Expression condition = parseExpression();
+        checkSyntax(TokenType.RIGHT_PAREN, "expected ')' in a if statement");
+
+        Statement thenBlock = parseStatement();
+        Statement elseBlock = null;
+
+        if(matchNextTokens(TokenType.ELSE))
+            elseBlock = parseStatement();
+
+        return new IfStatement(condition, thenBlock, elseBlock);
+
+    }
+
+    private BlockStatement parseBlockStatement() throws ParsingException {
+
+        var statements = new ArrayList<Statement>();
+
+        while(isNotEOF() && !matchNextTokens(TokenType.RIGHT_BRACE))
+            statements.add(parseStatement());
+
+        if(getPreviousToken().getType() != TokenType.RIGHT_BRACE)
+            throw new ParsingException(getPreviousToken(), "expected '}' after a block statement");
+
+        return new BlockStatement(statements);
+
+    }
+
 
     private Statement parseStatement() throws ParsingException {
 
-        //if(matchNextTokens(TokenType.LEFT_BRACE))
-        //    return parseBlockStatement();
+        if(matchNextTokens(TokenType.LEFT_BRACE))
+            return parseBlockStatement();
+
+        if(matchNextTokens(TokenType.IF))
+            return parseIfStatement();
+
+        if(matchNextTokens(TokenType.VAR))
+            return parseVariableStatement();
 
         return parseExpressionStatement();
 

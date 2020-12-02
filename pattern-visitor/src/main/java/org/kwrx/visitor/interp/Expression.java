@@ -25,10 +25,7 @@
 
 package org.kwrx.visitor.interp;
 
-import org.kwrx.visitor.interp.expressions.BinaryExpression;
-import org.kwrx.visitor.interp.expressions.GroupingExpression;
-import org.kwrx.visitor.interp.expressions.LiteralExpression;
-import org.kwrx.visitor.interp.expressions.UnaryExpression;
+import org.kwrx.visitor.interp.expressions.*;
 
 public abstract class Expression {
 
@@ -44,7 +41,8 @@ public abstract class Expression {
         //T visitSuperExpression(AssignExpression e);
         //T visitThisExpression(AssignExpression e);
         T visitUnaryExpression(UnaryExpression e);
-        //T visitVariableExpression(AssignExpression e);
+        T visitVariableExpression(VariableExpression e);
+        T visitAssignExpression(AssignExpression e);
     }
 
 

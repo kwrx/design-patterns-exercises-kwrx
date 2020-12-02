@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,33 +23,33 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
+package org.kwrx.visitor.interp.statements;
 
+import org.kwrx.visitor.Token;
+import org.kwrx.visitor.interp.Expression;
+import org.kwrx.visitor.interp.Statement;
 
-group = 'org.kwrx.visitor'
-version = '1.0'
+public class VariableStatement extends Statement {
 
-sourceCompatibility = 15
-targetCompatibility = 15
+    private final Token name;
+    private final Expression constructor;
 
-mainClassName = 'Program'
+    public VariableStatement(Token name, Expression constructor) {
+        this.name = name;
+        this.constructor = constructor;
+    }
 
+    public Token getName() {
+        return name;
+    }
 
-repositories {
-    mavenCentral()
-}
+    public Expression getConstructor() {
+        return constructor;
+    }
 
-dependencies {
-    implementation project(':shared')
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visitVariable(this);
+    }
 
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
 }

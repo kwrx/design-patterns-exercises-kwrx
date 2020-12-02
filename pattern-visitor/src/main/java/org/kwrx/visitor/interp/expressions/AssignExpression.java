@@ -23,47 +23,31 @@
  *
  */
 
-package org.kwrx.visitor;
+package org.kwrx.visitor.interp.expressions;
 
-import org.junit.Test;
+import org.kwrx.visitor.Token;
 import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.interp.expressions.BinaryExpression;
-import org.kwrx.visitor.interp.expressions.GroupingExpression;
-import org.kwrx.visitor.interp.expressions.LiteralExpression;
-import org.kwrx.visitor.interp.expressions.UnaryExpression;
-import org.kwrx.visitor.interp.statements.ExpressionStatement;
 
-public class ASTTest {
+public class AssignExpression extends Expression {
 
-    @Test
-    public void simpleExpressionsTest() {
+    private final Token name;
+    private final Expression value;
 
-        Expression e = new BinaryExpression(
-                new UnaryExpression(
-                        new Token(TokenType.MINUS, "-", null, 1, 1),
-                        new LiteralExpression(30)
-                ),
-                new Token(TokenType.STAR, "*", null, 1, 4),
-                new GroupingExpression(
-                        new LiteralExpression(2.5)
-                )
-        );
-
-        System.out.println(new AST(e));
-
+    public AssignExpression(Token name, Expression value) {
+        this.name = name;
+        this.value = value;
     }
 
-    @Test
-    public void simpleCodeTest() throws ScanningException, ParsingException {
-
-        Scanner scanner = new Scanner("2 * ((5 - 3) + -10) + 5;");
-        Parser parser = new Parser(scanner);
-
-        for(var s : parser.parse())
-            System.out.println(new AST(((ExpressionStatement) s).getExpression()));
-
-
-
+    public Token getName() {
+        return name;
     }
 
+    public Expression getValue() {
+        return value;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visitAssignExpression(this);
+    }
 }

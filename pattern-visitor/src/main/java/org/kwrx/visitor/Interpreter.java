@@ -27,32 +27,74 @@ package org.kwrx.visitor;
 
 import org.kwrx.visitor.interp.Expression;
 import org.kwrx.visitor.interp.Statement;
-import org.kwrx.visitor.interp.expressions.BinaryExpression;
-import org.kwrx.visitor.interp.expressions.GroupingExpression;
-import org.kwrx.visitor.interp.expressions.LiteralExpression;
-import org.kwrx.visitor.interp.expressions.UnaryExpression;
+import org.kwrx.visitor.interp.expressions.*;
 import org.kwrx.visitor.interp.statements.BlockStatement;
 import org.kwrx.visitor.interp.statements.ExpressionStatement;
+import org.kwrx.visitor.interp.statements.IfStatement;
+import org.kwrx.visitor.interp.statements.VariableStatement;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class Interpreter implements Statement.Visitor<Object>, Expression.Visitor<Object> {
 
     private final List<Statement> statements;
+    private RunningContext runningContext;
 
     public Interpreter(List<Statement> statements) {
         this.statements = statements;
+        this.runningContext = new RunningContext();
     }
 
     @Override
     public Object visitBlock(BlockStatement statement) {
+
+        RunningContext parent = runningContext;
+
+        try {
+
+            runningContext = new RunningContext(runningContext);
+
+            for(var s : statement.getStatements())
+                s.accept(this);
+
+        } finally { runningContext = parent; }
+
         return null;
+
     }
 
     @Override
     public Object visitExpression(ExpressionStatement statement) {
         return eval(statement.getExpression());
     }
+
+    @Override
+    public Object visitVariable(VariableStatement statement) {
+
+        Object value = null;
+        if(statement.getConstructor() != null)
+            value = eval(statement.getConstructor());
+
+        return runningContext.defineVariable(statement.getName(), value);
+
+    }
+
+    @Override
+    public Object visitIf(IfStatement statement) {
+
+        if(isTrueLiteral(eval(statement.getCondition())))
+            statement.getThenBlock().accept(this);
+        else
+            statement.getElseBlock().accept(this);
+
+        return null;
+
+    }
+
+
 
     @Override
     public Object visitBinaryExpression(BinaryExpression e) {
@@ -105,6 +147,20 @@ public class Interpreter implements Statement.Visitor<Object>, Expression.Visito
 
     }
 
+    @Override
+    public Object visitVariableExpression(VariableExpression e) {
+        return runningContext.resolveVariable(e.getName());
+    }
+
+    @Override
+    public Object visitAssignExpression(AssignExpression e) {
+        return runningContext.assignVariable(e.getName(), eval(e.getValue()));
+    }
+
+
+
+
+
     private Object eval(Expression e) {
         return e.accept(this);
     }
@@ -134,10 +190,13 @@ public class Interpreter implements Statement.Visitor<Object>, Expression.Visito
     }
 
 
-    public void execute() {
+    public RunningContext execute() {
 
         for(var statement : statements)
             statement.accept(this);
 
+        return runningContext;
+
     }
+
 }

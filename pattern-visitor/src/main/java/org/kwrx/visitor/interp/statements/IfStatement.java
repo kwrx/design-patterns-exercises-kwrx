@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,33 +23,37 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
+package org.kwrx.visitor.interp.statements;
 
+import org.kwrx.visitor.interp.Expression;
+import org.kwrx.visitor.interp.Statement;
 
-group = 'org.kwrx.visitor'
-version = '1.0'
+public class IfStatement extends Statement {
 
-sourceCompatibility = 15
-targetCompatibility = 15
+    private final Expression condition;
+    private final Statement thenBlock;
+    private final Statement elseBlock;
 
-mainClassName = 'Program'
+    public IfStatement(Expression condition, Statement thenBlock, Statement elseBlock) {
+        this.condition = condition;
+        this.thenBlock = thenBlock;
+        this.elseBlock = elseBlock;
+    }
 
+    public Expression getCondition() {
+        return condition;
+    }
 
-repositories {
-    mavenCentral()
-}
+    public Statement getThenBlock() {
+        return thenBlock;
+    }
 
-dependencies {
-    implementation project(':shared')
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
+    public Statement getElseBlock() {
+        return elseBlock;
+    }
 
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visitIf(this);
+    }
 }

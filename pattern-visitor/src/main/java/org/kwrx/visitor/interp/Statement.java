@@ -27,12 +27,16 @@ package org.kwrx.visitor.interp;
 
 import org.kwrx.visitor.interp.statements.BlockStatement;
 import org.kwrx.visitor.interp.statements.ExpressionStatement;
+import org.kwrx.visitor.interp.statements.IfStatement;
+import org.kwrx.visitor.interp.statements.VariableStatement;
 
 public abstract class Statement {
 
     public interface Visitor<T> {
         T visitBlock(BlockStatement statement);
         T visitExpression(ExpressionStatement statement);
+        T visitVariable(VariableStatement statement);
+        T visitIf(IfStatement statement);
     }
 
     public abstract <T> T accept(Statement.Visitor<T> visitor);
