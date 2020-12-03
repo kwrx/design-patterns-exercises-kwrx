@@ -53,7 +53,7 @@ public class IfStatement extends Statement {
     }
 
     @Override
-    public <T> T accept(Visitor<T> visitor) {
-        return visitor.visitIf(this);
+    public void accept(Visitor visitor) {
+        visitor.visitIfStatement(this);
     }
 }

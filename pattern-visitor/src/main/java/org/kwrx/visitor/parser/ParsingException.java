@@ -23,33 +23,23 @@
  *
  */
 
-package org.kwrx.visitor.interp.statements;
+package org.kwrx.visitor.parser;
 
-import org.kwrx.visitor.parser.Token;
-import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.interp.Statement;
+public class ParsingException extends Exception {
 
-public class VariableStatement extends Statement {
+    private final String message;
 
-    private final Token name;
-    private final Expression constructor;
-
-    public VariableStatement(Token name, Expression constructor) {
-        this.name = name;
-        this.constructor = constructor;
+    public ParsingException(Token token) {
+        this.message = String.format("Syntax error: %s: unexpected token: '%s' at line %d, column %d%n", getClass().getSimpleName(), token.getLexeme(), token.getLine(), token.getColumn());
     }
 
-    public Token getName() {
-        return name;
-    }
-
-    public Expression getConstructor() {
-        return constructor;
+    public ParsingException(Token token, String message) {
+        this.message = String.format("Syntax error: %s: unexpected token: '%s' at line %d, column %d: %s%n", getClass().getSimpleName(), token.getLexeme(), token.getLine(), token.getColumn(), message);
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitVariableStatement(this);
+    public String getMessage() {
+        return message;
     }
 
 }

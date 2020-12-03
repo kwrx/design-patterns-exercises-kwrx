@@ -23,12 +23,10 @@
  *
  */
 
-package org.kwrx.visitor;
+package org.kwrx.visitor.parser;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class Scanner {
 

@@ -23,33 +23,52 @@
  *
  */
 
-package org.kwrx.visitor.interp.statements;
+package org.kwrx.visitor.interp.types;
 
-import org.kwrx.visitor.parser.Token;
-import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.interp.Statement;
+import org.kwrx.visitor.RunningException;
 
-public class VariableStatement extends Statement {
+public class Dynamic {
 
-    private final Token name;
-    private final Expression constructor;
+    private final Object value;
 
-    public VariableStatement(Token name, Expression constructor) {
-        this.name = name;
-        this.constructor = constructor;
+    public Dynamic(Object value) {
+        this.value = value;
     }
 
-    public Token getName() {
-        return name;
+    public Object getValue() {
+        return value;
     }
 
-    public Expression getConstructor() {
-        return constructor;
+    public String getType() {
+        return "<dynamic>";
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visitVariableStatement(this);
+
+    public static boolean isTrue(Dynamic dyn) {
+
+        if(dyn == null)
+            return false;
+
+        if(dyn instanceof Nil)
+            return false;
+
+        if(dyn instanceof Logical)
+            return ((Logical) dyn).getBoolean();
+
+        return true;
+
+    }
+
+    public static boolean isEquals(Dynamic left, Dynamic right) {
+
+        if(left instanceof Nil && right instanceof Nil)
+            return true;
+
+        if(left instanceof Nil)
+            return false;
+
+        return left.equals(right);
+
     }
 
 }

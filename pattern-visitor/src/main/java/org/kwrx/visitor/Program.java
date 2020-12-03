@@ -23,33 +23,43 @@
  *
  */
 
-package org.kwrx.visitor.interp.statements;
+package org.kwrx.visitor;
 
-import org.kwrx.visitor.parser.Token;
-import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.interp.Statement;
+import org.kwrx.visitor.interp.types.Function;
+import org.kwrx.visitor.interp.FunctionCallable;
+import org.kwrx.visitor.interp.FunctionSymbol;
+import org.kwrx.visitor.parser.*;
 
-public class VariableStatement extends Statement {
+public class Program {
 
-    private final Token name;
-    private final Expression constructor;
+    private final String source;
+    private final Context context;
 
-    public VariableStatement(Token name, Expression constructor) {
-        this.name = name;
-        this.constructor = constructor;
+    public Program(String source) {
+        this.source = source;
+        this.context = new Context();
     }
 
-    public Token getName() {
-        return name;
+
+    public void define(String name, int arity, FunctionCallable callable) {
+
+        var token = new Token(TokenType.IDENTIFIER, name, null, 0, 0);
+
+        context.define(
+                token,
+                new Function(new FunctionSymbol(token, arity, callable))
+        );
+
     }
 
-    public Expression getConstructor() {
-        return constructor;
-    }
+    public Context run() throws ScanningException, ParsingException, RunningException {
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visitVariableStatement(this);
+        var scanner = new Scanner(source);
+        var parser = new Parser(scanner);
+        var interp = new Interpreter(parser.parse(), context);
+
+        return interp.execute();
+
     }
 
 }

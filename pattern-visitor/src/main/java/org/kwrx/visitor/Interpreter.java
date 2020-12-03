@@ -26,96 +26,126 @@
 package org.kwrx.visitor;
 
 import org.kwrx.visitor.interp.Expression;
+import org.kwrx.visitor.interp.FunctionSymbol;
 import org.kwrx.visitor.interp.Statement;
 import org.kwrx.visitor.interp.expressions.*;
-import org.kwrx.visitor.interp.statements.BlockStatement;
-import org.kwrx.visitor.interp.statements.ExpressionStatement;
-import org.kwrx.visitor.interp.statements.IfStatement;
-import org.kwrx.visitor.interp.statements.VariableStatement;
+import org.kwrx.visitor.interp.statements.*;
+import org.kwrx.visitor.interp.types.*;
+import org.kwrx.visitor.interp.types.Number;
+import org.kwrx.visitor.parser.TokenType;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 
-public class Interpreter implements Statement.Visitor<Object>, Expression.Visitor<Object> {
+public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
     private final List<Statement> statements;
-    private RunningContext runningContext;
+    private Context runningContext;
 
-    public Interpreter(List<Statement> statements) {
+    public Interpreter(List<Statement> statements, Context context) {
         this.statements = statements;
-        this.runningContext = new RunningContext();
+        this.runningContext = context;
+    }
+
+
+
+    @Override
+    public void visitBlockStatement(BlockStatement statement) {
+        executeBlock(statement, new Context(runningContext));
     }
 
     @Override
-    public Object visitBlock(BlockStatement statement) {
-
-        RunningContext parent = runningContext;
-
-        try {
-
-            runningContext = new RunningContext(runningContext);
-
-            for(var s : statement.getStatements())
-                s.accept(this);
-
-        } finally { runningContext = parent; }
-
-        return null;
-
+    public void visitExpressionStatement(ExpressionStatement statement) {
+        eval(statement.getExpression());
     }
 
     @Override
-    public Object visitExpression(ExpressionStatement statement) {
-        return eval(statement.getExpression());
+    public void visitVariableStatement(VariableStatement statement) {
+        runningContext.define(statement.getName(), eval(statement.getConstructor()));
     }
 
     @Override
-    public Object visitVariable(VariableStatement statement) {
+    public void visitIfStatement(IfStatement statement) {
 
-        Object value = null;
-        if(statement.getConstructor() != null)
-            value = eval(statement.getConstructor());
-
-        return runningContext.defineVariable(statement.getName(), value);
-
-    }
-
-    @Override
-    public Object visitIf(IfStatement statement) {
-
-        if(isTrueLiteral(eval(statement.getCondition())))
+        if(Dynamic.isTrue(eval(statement.getCondition())))
             statement.getThenBlock().accept(this);
         else
             statement.getElseBlock().accept(this);
 
-        return null;
+    }
 
+    @Override
+    public void visitWhileStatement(WhileStatement statement) {
+
+        while(Dynamic.isTrue(eval(statement.getCondition())))
+            statement.getBody().accept(this);
+
+    }
+
+    @Override
+    public void visitForStatement(ForStatement statement) {
+
+        new BlockStatement(Arrays.asList(
+
+                statement.getInitializer(),
+
+                new WhileStatement(statement.getCondition(),
+                        new BlockStatement(Arrays.asList(
+                                statement.getBody(),
+                                statement.getIncrement()
+                        ))
+                )
+
+        )).accept(this);
+
+    }
+
+    @Override
+    public void visitFunctionStatement(FunctionStatement statement) {
+
+        runningContext.define(statement.getName(), new Function(new FunctionSymbol(statement.getName(), statement.getParams().size(), (interpreter, params) -> {
+
+            Context context = new Context(runningContext);
+
+            for (int i = 0; i < params.size(); i++)
+                context.define(statement.getParams().get(i), params.get(i));
+
+            return interpreter.executeBlock(statement.getBody(), context);
+
+        })));
+
+    }
+
+    @Override
+    public void visitReturnStatement(ReturnStatement statement) {
+        throw new Return(eval(statement.getResult()));
     }
 
 
 
     @Override
-    public Object visitBinaryExpression(BinaryExpression e) {
+    public Dynamic visitBinaryExpression(BinaryExpression e) {
 
-        Object left = eval(e.getLeft());
-        Object right = eval(e.getRight());
+        Dynamic left = eval(e.getLeft());
+        Dynamic right = eval(e.getRight());
 
         return switch (e.getOperator().getType()) {
 
-            case PLUS  -> (double) left + (double) right;
-            case MINUS -> (double) left - (double) right;
-            case STAR  -> (double) left * (double) right;
-            case SLASH -> (double) left / (double) right;
+            case PLUS  -> Number.add(left, right);
+            case MINUS -> Number.sub(left, right);
+            case STAR  -> Number.mul(left, right);
+            case SLASH -> Number.div(left, right);
 
-            case GREATER       -> (double) left > (double) right;
-            case LESS          -> (double) left < (double) right;
-            case GREATER_EQUAL -> (double) left >= (double) right;
-            case LESS_EQUAL    -> (double) left <= (double) right;
+            case GREATER       -> Number.gr(left, right);
+            case LESS          -> Number.ls(left, right);
+            case GREATER_EQUAL -> Number.gre(left, right);
+            case LESS_EQUAL    -> Number.lse(left, right);
 
-            case EQUAL_EQUAL   ->  isEquals(left, right);
-            case BANG_EQUAL    -> !isEquals(left, right);
+            case EQUAL_EQUAL   -> Logical.from( Dynamic.isEquals(left, right));
+            case BANG_EQUAL    -> Logical.from(!Dynamic.isEquals(left, right));
 
             default -> throw new IllegalStateException();
 
@@ -124,22 +154,40 @@ public class Interpreter implements Statement.Visitor<Object>, Expression.Visito
     }
 
     @Override
-    public Object visitGroupingExpression(GroupingExpression e) {
+    public Dynamic visitGroupingExpression(GroupingExpression e) {
         return eval(e.getExpression());
     }
 
     @Override
-    public Object visitLiteralExpression(LiteralExpression e) {
-        return e.getLiteral();
+    public Dynamic visitLiteralExpression(LiteralExpression e) {
+
+        if(e.getLiteral() == null)
+            return Nil.value();
+
+
+        return switch (e.getLiteral().getClass().getSimpleName()) {
+
+            case "Double"  -> new Number(e.getLiteral());
+            case "String"  -> new Text(e.getLiteral());
+            case "Boolean" -> Logical.from((boolean) e.getLiteral());
+
+            default -> new Dynamic(e.getLiteral());
+
+        };
+
     }
 
     @Override
-    public Object visitUnaryExpression(UnaryExpression e) {
+    public Dynamic visitUnaryExpression(UnaryExpression e) {
+
+        if(e.getRight() instanceof VariableExpression && e.getOperator().getType() == TokenType.AND)
+            return new Reference(((VariableExpression) e.getRight()).getName());
+
 
         return switch (e.getOperator().getType()) {
 
-            case BANG  -> !isTrueLiteral(eval(e.getRight()));
-            case MINUS -> -((double) eval(e.getRight()));
+            case BANG  -> Logical.from(!Dynamic.isTrue(eval(e.getRight())));
+            case MINUS -> Number.minus(eval(e.getRight()));
 
             default -> throw new IllegalStateException();
 
@@ -148,49 +196,75 @@ public class Interpreter implements Statement.Visitor<Object>, Expression.Visito
     }
 
     @Override
-    public Object visitVariableExpression(VariableExpression e) {
-        return runningContext.resolveVariable(e.getName());
+    public Dynamic visitVariableExpression(VariableExpression e) {
+        return runningContext.resolve(e.getName());
     }
 
     @Override
-    public Object visitAssignExpression(AssignExpression e) {
-        return runningContext.assignVariable(e.getName(), eval(e.getValue()));
+    public Dynamic visitAssignExpression(AssignExpression e) {
+        return runningContext.assign(e.getName(), eval(e.getValue()));
+    }
+
+    @Override
+    public Dynamic visitInvokeExpression(InvokeExpression e) {
+
+        var fun = (Function) eval(e.getReference());
+        var sym = (FunctionSymbol) fun.getFunction();
+
+        if (sym.getArity() != FunctionSymbol.VARARGS && e.getParams().size() != sym.getArity())
+            throw new RunningException(sym.getName(), String.format("too many or too few arguments, expected %d, given %d", sym.getArity(), e.getParams().size()));
+
+
+        return sym.call(
+                this,
+                e.getParams()
+                        .stream()
+                        .map(this::eval)
+                        .collect(Collectors.toList())
+        );
+
+    }
+
+    @Override
+    public Dynamic visitNoopExpression(NoopExpression e) {
+        return Nil.value();
     }
 
 
 
 
 
-    private Object eval(Expression e) {
+    private Dynamic eval(Expression e) {
         return e.accept(this);
     }
 
-    private boolean isTrueLiteral(Object value) {
+    private Dynamic executeBlock(BlockStatement statement, Context context) {
 
-        if(value == null)
-            return false;
+        Context parent = runningContext;
 
-        if(value instanceof Boolean)
-            return (boolean) value;
+        try {
 
-        return true;
+            runningContext = context;
+
+            for (var s : statement.getStatements())
+                s.accept(this);
+
+
+        } catch(Return returnValue) {
+            return returnValue.getValue();
+
+        } finally {
+            runningContext = parent;
+        }
+
+
+        return Nil.value();
 
     }
 
-    private boolean isEquals(Object left, Object right) {
-
-        if(left == null && right == null)
-            return true;
-
-        if(left == null)
-            return false;
-
-        return left.equals(right);
-
-    }
 
 
-    public RunningContext execute() {
+    public Context execute() {
 
         for(var statement : statements)
             statement.accept(this);

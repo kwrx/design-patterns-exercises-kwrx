@@ -25,31 +25,39 @@
 
 package org.kwrx.visitor.interp.statements;
 
-import org.kwrx.visitor.parser.Token;
-import org.kwrx.visitor.interp.Expression;
+import org.kwrx.visitor.Context;
 import org.kwrx.visitor.interp.Statement;
+import org.kwrx.visitor.parser.Token;
+import java.util.List;
 
-public class VariableStatement extends Statement {
+public class FunctionStatement extends Statement {
 
     private final Token name;
-    private final Expression constructor;
+    private final List<Token> params;
+    private final BlockStatement body;
 
-    public VariableStatement(Token name, Expression constructor) {
+
+    public FunctionStatement(Token name, List<Token> params, BlockStatement body) {
         this.name = name;
-        this.constructor = constructor;
+        this.params = params;
+        this.body = body;
     }
 
     public Token getName() {
         return name;
     }
 
-    public Expression getConstructor() {
-        return constructor;
+    public List<Token> getParams() {
+        return params;
     }
+
+    public BlockStatement getBody() {
+        return body;
+    }
+
 
     @Override
     public void accept(Visitor visitor) {
-        visitor.visitVariableStatement(this);
+        visitor.visitFunctionStatement(this);
     }
-
 }

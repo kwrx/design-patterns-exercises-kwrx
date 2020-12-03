@@ -23,15 +23,12 @@
  *
  */
 
-package org.kwrx.visitor;
+package org.kwrx.visitor.parser;
 
 import org.kwrx.visitor.interp.Expression;
 import org.kwrx.visitor.interp.Statement;
 import org.kwrx.visitor.interp.expressions.*;
-import org.kwrx.visitor.interp.statements.BlockStatement;
-import org.kwrx.visitor.interp.statements.ExpressionStatement;
-import org.kwrx.visitor.interp.statements.IfStatement;
-import org.kwrx.visitor.interp.statements.VariableStatement;
+import org.kwrx.visitor.interp.statements.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -42,7 +39,6 @@ public class Parser {
 
 
     private final List<Token> tokens;
-    private final List<Expression> expressions;
 
     private int start;
     private int current;
@@ -52,7 +48,6 @@ public class Parser {
     public Parser(Scanner scanner) {
 
         this.tokens = scanner.getTokens();
-        this.expressions = new LinkedList<>();
 
         this.start =
         this.current = 0;
@@ -177,10 +172,39 @@ public class Parser {
 
     private Expression parseUnary() throws ParsingException {
 
-        if(matchNextTokens(TokenType.BANG) || matchNextTokens(TokenType.MINUS))
+        if(matchNextTokens(TokenType.BANG) || matchNextTokens(TokenType.MINUS) || matchNextTokens(TokenType.AND))
             return new UnaryExpression(getPreviousToken(), parseUnary());
 
-        return parsePrimary();
+        return parseInvoke();
+
+    }
+
+    private Expression parseInvoke() throws ParsingException {
+
+        Expression fun = parsePrimary();
+
+        while(matchNextTokens(TokenType.LEFT_PAREN))
+            fun = parseParameters(fun);
+
+        return fun;
+
+    }
+
+    private Expression parseParameters(Expression fun) throws ParsingException {
+
+        List<Expression> params = new LinkedList<>();
+
+        if(!matchNextTokens(TokenType.RIGHT_PAREN)) {
+
+            do {
+                params.add(parseExpression());
+            } while(matchNextTokens(TokenType.COMMA));
+
+            checkSyntax(TokenType.RIGHT_PAREN, "expected ')' after a function call");
+
+        }
+
+        return new InvokeExpression(fun, params);
 
     }
 
@@ -229,11 +253,15 @@ public class Parser {
 
         checkSyntax(TokenType.IDENTIFIER, "expected variable name in declaration");
 
-        Token name = getPreviousToken();
-        Expression constructor = null;
 
+        Token name = getPreviousToken();
+
+        Expression constructor;
         if(matchNextTokens(TokenType.EQUAL))
             constructor = parseExpression();
+        else
+            constructor = new NoopExpression();
+
 
         checkSyntax(TokenType.SEMICOLON, "expected ';' after an expression");
         return new VariableStatement(name, constructor);
@@ -246,13 +274,72 @@ public class Parser {
         Expression condition = parseExpression();
         checkSyntax(TokenType.RIGHT_PAREN, "expected ')' in a if statement");
 
+
         Statement thenBlock = parseStatement();
         Statement elseBlock = null;
 
         if(matchNextTokens(TokenType.ELSE))
             elseBlock = parseStatement();
+        else
+            elseBlock = new ExpressionStatement(new NoopExpression());
+
 
         return new IfStatement(condition, thenBlock, elseBlock);
+
+    }
+
+    private WhileStatement parseWhileStatement() throws ParsingException {
+
+        checkSyntax(TokenType.LEFT_PAREN, "expected '(' in a while statement");
+        Expression condition = parseExpression();
+        checkSyntax(TokenType.RIGHT_PAREN, "expected ')' in a while statement");
+
+        return new WhileStatement(condition, parseStatement());
+
+    }
+
+    private ForStatement parseForStatement() throws ParsingException {
+
+        Expression condition;
+        Statement initializer;
+        Statement increment;
+
+        checkSyntax(TokenType.LEFT_PAREN, "expected '(' in a for statement");
+
+
+        if(matchNextTokens(TokenType.SEMICOLON))
+            initializer = new ExpressionStatement(new NoopExpression());
+        else if(matchNextTokens(TokenType.VAR))
+            initializer = parseVariableStatement();
+        else
+            initializer = parseExpressionStatement();
+
+
+        if(!matchNextTokens(TokenType.SEMICOLON)) {
+
+            condition = parseExpression();
+            checkSyntax(TokenType.SEMICOLON, "expected ';' in a for condition block");
+
+        } else {
+
+            condition = new LiteralExpression(true);
+
+        }
+
+
+        if(!matchNextTokens(TokenType.RIGHT_PAREN)) {
+
+            increment = new ExpressionStatement(parseExpression());
+            checkSyntax(TokenType.RIGHT_PAREN, "expected ')' in a for statement");
+
+        } else {
+
+            increment = new ExpressionStatement(new NoopExpression());
+
+        }
+
+
+        return new ForStatement(initializer, condition, increment, parseStatement());
 
     }
 
@@ -271,16 +358,78 @@ public class Parser {
     }
 
 
+    private FunctionStatement parseFunctionStatement() throws ParsingException {
+
+        checkSyntax(TokenType.IDENTIFIER, "expected identifier for a function declaration");
+        Token name = getPreviousToken();
+        checkSyntax(TokenType.LEFT_PAREN, "expected '(' after a function declaration");
+
+
+        return new FunctionStatement(name, new LinkedList<>() {{
+
+            if(!matchNextTokens(TokenType.RIGHT_PAREN)) {
+
+                do {
+
+                    checkSyntax(TokenType.IDENTIFIER, "expected identifier as parameter name");
+                    add(getPreviousToken());
+
+                } while(matchNextTokens(TokenType.COMMA));
+
+
+                checkSyntax(TokenType.RIGHT_PAREN, "expected ')' after a function declaration");
+
+            }
+
+            checkSyntax(TokenType.LEFT_BRACE, "expected '{' after a function declaration");
+
+        }}, parseBlockStatement());
+
+    }
+
+
+    private Statement parseReturnStatement() throws ParsingException {
+
+        Expression result;
+
+        if(!matchNextTokens(TokenType.SEMICOLON)) {
+
+            result = parseExpression();
+            checkSyntax(TokenType.SEMICOLON, "expected ';' after return statement");
+
+        } else {
+
+            result = new NoopExpression();
+
+        }
+
+        return new ReturnStatement(result);
+
+    }
+
+
     private Statement parseStatement() throws ParsingException {
 
         if(matchNextTokens(TokenType.LEFT_BRACE))
             return parseBlockStatement();
 
+        if(matchNextTokens(TokenType.FUN))
+            return parseFunctionStatement();
+
         if(matchNextTokens(TokenType.IF))
             return parseIfStatement();
 
+        if(matchNextTokens(TokenType.WHILE))
+            return parseWhileStatement();
+
+        if(matchNextTokens(TokenType.FOR))
+            return parseForStatement();
+
         if(matchNextTokens(TokenType.VAR))
             return parseVariableStatement();
+
+        if(matchNextTokens(TokenType.RETURN))
+            return parseReturnStatement();
 
         return parseExpressionStatement();
 
@@ -289,7 +438,7 @@ public class Parser {
 
     public List<Statement> parse() throws ParsingException {
 
-        return new ArrayList<Statement>() {{
+        return new ArrayList<>() {{
             while (isNotEOF())
                 add(parseStatement());
         }};

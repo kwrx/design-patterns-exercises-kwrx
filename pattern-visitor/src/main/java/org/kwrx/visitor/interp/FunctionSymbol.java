@@ -23,33 +23,45 @@
  *
  */
 
-package org.kwrx.visitor.interp.statements;
+package org.kwrx.visitor.interp;
 
+import org.kwrx.visitor.Context;
+import org.kwrx.visitor.Interpreter;
+import org.kwrx.visitor.interp.types.Dynamic;
 import org.kwrx.visitor.parser.Token;
-import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.interp.Statement;
 
-public class VariableStatement extends Statement {
+import java.util.List;
+
+public class FunctionSymbol {
+
+    public static final int VARARGS = -1;
 
     private final Token name;
-    private final Expression constructor;
+    private final int arity;
+    private final FunctionCallable callable;
 
-    public VariableStatement(Token name, Expression constructor) {
+    public FunctionSymbol(Token name, int arity, FunctionCallable callable) {
         this.name = name;
-        this.constructor = constructor;
+        this.arity = arity;
+        this.callable = callable;
     }
 
     public Token getName() {
         return name;
     }
 
-    public Expression getConstructor() {
-        return constructor;
+    public int getArity() {
+        return arity;
     }
 
+
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitVariableStatement(this);
+    public String toString() {
+        return String.format("<%s>", getName().getLexeme());
+    }
+
+    public Dynamic call(Interpreter interpreter, List<Dynamic> params) {
+        return callable.call(interpreter, params);
     }
 
 }

@@ -26,7 +26,8 @@
 package org.kwrx.visitor.interp.expressions;
 
 import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.Token;
+import org.kwrx.visitor.interp.types.Dynamic;
+import org.kwrx.visitor.parser.Token;
 
 public class UnaryExpression extends Expression {
 
@@ -47,7 +48,7 @@ public class UnaryExpression extends Expression {
     }
 
     @Override
-    public <T> T accept(Visitor<T> visitor) {
+    public Dynamic accept(Visitor visitor) {
         return visitor.visitUnaryExpression(this);
     }
 

@@ -25,6 +25,8 @@
 
 package org.kwrx.visitor;
 
+import org.kwrx.visitor.parser.Token;
+
 public class RunningException extends RuntimeException {
 
     private final String message;

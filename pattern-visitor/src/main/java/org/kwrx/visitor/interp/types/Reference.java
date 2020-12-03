@@ -23,33 +23,26 @@
  *
  */
 
-package org.kwrx.visitor.interp.statements;
+package org.kwrx.visitor.interp.types;
 
 import org.kwrx.visitor.parser.Token;
-import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.interp.Statement;
 
-public class VariableStatement extends Statement {
+public class Reference extends Dynamic {
 
-    private final Token name;
-    private final Expression constructor;
+    private final Token value;
 
-    public VariableStatement(Token name, Expression constructor) {
-        this.name = name;
-        this.constructor = constructor;
+    public Reference(Token value) {
+        super(null);
+        this.value = value;
     }
 
-    public Token getName() {
-        return name;
-    }
-
-    public Expression getConstructor() {
-        return constructor;
+    public Token getReference() {
+        return value;
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitVariableStatement(this);
+    public String getType() {
+        return String.format("<reference(%s)>", value.getLexeme());
     }
 
 }

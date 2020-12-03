@@ -23,33 +23,23 @@
  *
  */
 
-package org.kwrx.visitor.interp.statements;
+package org.kwrx.visitor.interp.types;
 
-import org.kwrx.visitor.parser.Token;
-import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.interp.Statement;
+import org.kwrx.visitor.interp.FunctionSymbol;
 
-public class VariableStatement extends Statement {
+public class Function extends Dynamic {
 
-    private final Token name;
-    private final Expression constructor;
-
-    public VariableStatement(Token name, Expression constructor) {
-        this.name = name;
-        this.constructor = constructor;
+    public Function(Object value) {
+        super(value);
     }
 
-    public Token getName() {
-        return name;
-    }
-
-    public Expression getConstructor() {
-        return constructor;
+    public FunctionSymbol getFunction() {
+        return (FunctionSymbol) getValue();
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitVariableStatement(this);
+    public String getType() {
+        return "<function>";
     }
 
 }

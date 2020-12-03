@@ -26,6 +26,7 @@
 package org.kwrx.visitor.interp.expressions;
 
 import org.kwrx.visitor.interp.Expression;
+import org.kwrx.visitor.interp.types.Dynamic;
 
 public class LiteralExpression extends Expression {
 
@@ -40,7 +41,7 @@ public class LiteralExpression extends Expression {
     }
 
     @Override
-    public <T> T accept(Visitor<T> visitor) {
+    public Dynamic accept(Visitor visitor) {
         return visitor.visitLiteralExpression(this);
     }
 }

@@ -23,33 +23,56 @@
  *
  */
 
-package org.kwrx.visitor.interp.statements;
+package org.kwrx.visitor.parser;
 
-import org.kwrx.visitor.parser.Token;
-import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.interp.Statement;
+public enum TokenType {
 
-public class VariableStatement extends Statement {
+    LEFT_PAREN,
+    LEFT_BRACE,
+    RIGHT_PAREN,
+    RIGHT_BRACE,
 
-    private final Token name;
-    private final Expression constructor;
+    COMMA,
+    DOT,
+    SEMICOLON,
 
-    public VariableStatement(Token name, Expression constructor) {
-        this.name = name;
-        this.constructor = constructor;
-    }
+    MINUS,
+    PLUS,
+    STAR,
+    SLASH,
 
-    public Token getName() {
-        return name;
-    }
+    BANG,
+    BANG_EQUAL,
+    EQUAL,
+    EQUAL_EQUAL,
+    GREATER, GREATER_EQUAL,
+    LESS, LESS_EQUAL,
 
-    public Expression getConstructor() {
-        return constructor;
-    }
+    IDENTIFIER,
+    STRING,
+    NUMBER,
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visitVariableStatement(this);
-    }
+    AND,
+    OR,
+
+    CLASS,
+    EXTENDS,
+    THIS,
+    SUPER,
+    FUN,
+    VAR,
+
+    IF,
+    ELSE,
+    FOR,
+    WHILE,
+    BREAK,
+    RETURN,
+
+    TRUE,
+    FALSE,
+    NIL,
+
+    EOF,
 
 }

@@ -23,56 +23,16 @@
  *
  */
 
-package org.kwrx.visitor;
+package org.kwrx.visitor.interp.expressions;
 
-public enum TokenType {
+import org.kwrx.visitor.interp.Expression;
+import org.kwrx.visitor.interp.types.Dynamic;
 
-    LEFT_PAREN,
-    LEFT_BRACE,
-    RIGHT_PAREN,
-    RIGHT_BRACE,
+public class NoopExpression extends Expression {
 
-    COMMA,
-    DOT,
-    SEMICOLON,
-
-    MINUS,
-    PLUS,
-    STAR,
-    SLASH,
-
-    BANG,
-    BANG_EQUAL,
-    EQUAL,
-    EQUAL_EQUAL,
-    GREATER, GREATER_EQUAL,
-    LESS, LESS_EQUAL,
-
-    IDENTIFIER,
-    STRING,
-    NUMBER,
-
-    AND,
-    OR,
-
-    CLASS,
-    EXTENDS,
-    THIS,
-    SUPER,
-    FUN,
-    VAR,
-
-    IF,
-    ELSE,
-    FOR,
-    WHILE,
-    BREAK,
-    RETURN,
-
-    TRUE,
-    FALSE,
-    NIL,
-
-    EOF,
+    @Override
+    public Dynamic accept(Visitor visitor) {
+        return visitor.visitNoopExpression(this);
+    }
 
 }

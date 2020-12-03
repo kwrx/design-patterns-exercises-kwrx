@@ -23,47 +23,43 @@
  *
  */
 
-package org.kwrx.visitor;
+package org.kwrx.visitor.interp.statements;
 
-public class Token {
+import org.kwrx.visitor.interp.Expression;
+import org.kwrx.visitor.interp.Statement;
 
-    private final TokenType type;
-    private final String lexeme;
-    private final Object literal;
-    private final int line;
-    private final int column;
+public class ForStatement extends Statement {
 
-    public Token(TokenType type, String lexeme, Object literal, int line, int column) {
-        this.type = type;
-        this.lexeme = lexeme;
-        this.literal = literal;
-        this.line = line;
-        this.column = column;
+    private final Statement initializer;
+    private final Expression condition;
+    private final Statement increment;
+    private final Statement body;
+
+    public ForStatement(Statement initializer, Expression condition, Statement increment, Statement body) {
+        this.initializer = initializer;
+        this.condition = condition;
+        this.increment = increment;
+        this.body = body;
     }
 
-    public TokenType getType() {
-        return type;
+    public Statement getInitializer() {
+        return initializer;
     }
 
-    public String getLexeme() {
-        return lexeme;
+    public Expression getCondition() {
+        return condition;
     }
 
-    public Object getLiteral() {
-        return literal;
+    public Statement getIncrement() {
+        return increment;
     }
 
-    public int getLine() {
-        return line;
+    public Statement getBody() {
+        return body;
     }
 
-    public int getColumn() {
-        return column;
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitForStatement(this);
     }
-
-    public String toString() {
-        return String.format("%s %s %s", type, lexeme, literal);
-    }
-
 }
-

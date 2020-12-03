@@ -23,33 +23,25 @@
  *
  */
 
-package org.kwrx.visitor.interp.statements;
+package org.kwrx.visitor.interp.types;
 
-import org.kwrx.visitor.parser.Token;
-import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.interp.Statement;
+public class Nil extends Dynamic {
 
-public class VariableStatement extends Statement {
+    private final static Nil instance = new Nil(null);
 
-    private final Token name;
-    private final Expression constructor;
-
-    public VariableStatement(Token name, Expression constructor) {
-        this.name = name;
-        this.constructor = constructor;
-    }
-
-    public Token getName() {
-        return name;
-    }
-
-    public Expression getConstructor() {
-        return constructor;
+    private Nil(Object value) {
+        super(null);
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitVariableStatement(this);
+    public String getType() {
+        return "<nil>";
     }
+
+
+    public static Nil value() {
+        return instance;
+    }
+
 
 }

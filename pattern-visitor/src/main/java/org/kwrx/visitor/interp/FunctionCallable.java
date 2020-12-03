@@ -23,33 +23,13 @@
  *
  */
 
-package org.kwrx.visitor.interp.statements;
+package org.kwrx.visitor.interp;
 
-import org.kwrx.visitor.parser.Token;
-import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.interp.Statement;
+import org.kwrx.visitor.Interpreter;
+import org.kwrx.visitor.interp.types.Dynamic;
 
-public class VariableStatement extends Statement {
+import java.util.List;
 
-    private final Token name;
-    private final Expression constructor;
-
-    public VariableStatement(Token name, Expression constructor) {
-        this.name = name;
-        this.constructor = constructor;
-    }
-
-    public Token getName() {
-        return name;
-    }
-
-    public Expression getConstructor() {
-        return constructor;
-    }
-
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visitVariableStatement(this);
-    }
-
+public interface FunctionCallable {
+    Dynamic call(Interpreter interpreter, List<Dynamic> params);
 }

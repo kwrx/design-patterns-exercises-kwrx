@@ -25,31 +25,24 @@
 
 package org.kwrx.visitor.interp.statements;
 
-import org.kwrx.visitor.parser.Token;
 import org.kwrx.visitor.interp.Expression;
 import org.kwrx.visitor.interp.Statement;
 
-public class VariableStatement extends Statement {
+public class ReturnStatement extends Statement {
 
-    private final Token name;
-    private final Expression constructor;
+    private final Expression result;
 
-    public VariableStatement(Token name, Expression constructor) {
-        this.name = name;
-        this.constructor = constructor;
+    public ReturnStatement(Expression result) {
+        this.result = result;
     }
 
-    public Token getName() {
-        return name;
-    }
-
-    public Expression getConstructor() {
-        return constructor;
+    public Expression getResult() {
+        return result;
     }
 
     @Override
     public void accept(Visitor visitor) {
-        visitor.visitVariableStatement(this);
+        visitor.visitReturnStatement(this);
     }
 
 }

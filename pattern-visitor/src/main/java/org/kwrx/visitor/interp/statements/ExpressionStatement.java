@@ -41,7 +41,7 @@ public class ExpressionStatement extends Statement {
     }
 
     @Override
-    public <T> T accept(Visitor<T> visitor) {
-        return visitor.visitExpression(this);
+    public void accept(Visitor visitor) {
+        visitor.visitExpressionStatement(this);
     }
 }

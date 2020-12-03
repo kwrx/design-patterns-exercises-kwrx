@@ -23,33 +23,47 @@
  *
  */
 
-package org.kwrx.visitor.interp.statements;
+package org.kwrx.visitor.parser;
 
-import org.kwrx.visitor.parser.Token;
-import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.interp.Statement;
+public class Token {
 
-public class VariableStatement extends Statement {
+    private final TokenType type;
+    private final String lexeme;
+    private final Object literal;
+    private final int line;
+    private final int column;
 
-    private final Token name;
-    private final Expression constructor;
-
-    public VariableStatement(Token name, Expression constructor) {
-        this.name = name;
-        this.constructor = constructor;
+    public Token(TokenType type, String lexeme, Object literal, int line, int column) {
+        this.type = type;
+        this.lexeme = lexeme;
+        this.literal = literal;
+        this.line = line;
+        this.column = column;
     }
 
-    public Token getName() {
-        return name;
+    public TokenType getType() {
+        return type;
     }
 
-    public Expression getConstructor() {
-        return constructor;
+    public String getLexeme() {
+        return lexeme;
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visitVariableStatement(this);
+    public Object getLiteral() {
+        return literal;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public String toString() {
+        return String.format("%s %s %s", type, lexeme, literal);
     }
 
 }
+

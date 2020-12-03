@@ -25,7 +25,8 @@
 
 package org.kwrx.visitor.interp.expressions;
 
-import org.kwrx.visitor.Token;
+import org.kwrx.visitor.interp.types.Dynamic;
+import org.kwrx.visitor.parser.Token;
 import org.kwrx.visitor.interp.Expression;
 
 public class VariableExpression extends Expression {
@@ -41,7 +42,7 @@ public class VariableExpression extends Expression {
     }
 
     @Override
-    public <T> T accept(Visitor<T> visitor) {
+    public Dynamic accept(Visitor visitor) {
         return visitor.visitVariableExpression(this);
     }
 }

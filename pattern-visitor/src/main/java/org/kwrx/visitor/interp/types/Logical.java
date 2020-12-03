@@ -23,33 +23,29 @@
  *
  */
 
-package org.kwrx.visitor.interp.statements;
+package org.kwrx.visitor.interp.types;
 
-import org.kwrx.visitor.parser.Token;
-import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.interp.Statement;
+public class Logical extends Dynamic {
 
-public class VariableStatement extends Statement {
+    private final static Logical trueInstance = new Logical(true);
+    private final static Logical falseInstance = new Logical(false);
 
-    private final Token name;
-    private final Expression constructor;
-
-    public VariableStatement(Token name, Expression constructor) {
-        this.name = name;
-        this.constructor = constructor;
+    private Logical(Object value) {
+        super(value);
     }
 
-    public Token getName() {
-        return name;
-    }
-
-    public Expression getConstructor() {
-        return constructor;
+    public boolean getBoolean() {
+        return (boolean) getValue();
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitVariableStatement(this);
+    public String getType() {
+        return "<boolean>";
     }
+
+    public static Logical from(boolean cond) {
+        return cond ? trueInstance : falseInstance;
+    }
+
 
 }

@@ -26,26 +26,22 @@
 package org.kwrx.visitor.interp;
 
 import org.kwrx.visitor.interp.expressions.*;
+import org.kwrx.visitor.interp.types.Dynamic;
 
 public abstract class Expression {
 
-    public interface Visitor<T> {
-        //T visitAssignExpression(AssignExpression e);
-        T visitBinaryExpression(BinaryExpression e);
-        //T visitCallExpression(AssignExpression e);
-        //T visitGetExpression(AssignExpression e);
-        T visitGroupingExpression(GroupingExpression e);
-        T visitLiteralExpression(LiteralExpression e);
-        //T visitLogicalExpression(AssignExpression e);
-        //T visitSetExpression(AssignExpression e);
-        //T visitSuperExpression(AssignExpression e);
-        //T visitThisExpression(AssignExpression e);
-        T visitUnaryExpression(UnaryExpression e);
-        T visitVariableExpression(VariableExpression e);
-        T visitAssignExpression(AssignExpression e);
+    public interface Visitor {
+        Dynamic visitBinaryExpression(BinaryExpression e);
+        Dynamic visitGroupingExpression(GroupingExpression e);
+        Dynamic visitLiteralExpression(LiteralExpression e);
+        Dynamic visitUnaryExpression(UnaryExpression e);
+        Dynamic visitVariableExpression(VariableExpression e);
+        Dynamic visitAssignExpression(AssignExpression e);
+        Dynamic visitNoopExpression(NoopExpression e);
+        Dynamic visitInvokeExpression(InvokeExpression e);
     }
 
 
-    public abstract <T> T accept(Expression.Visitor<T> visitor);
+    public abstract Dynamic accept(Expression.Visitor visitor);
 
 }
