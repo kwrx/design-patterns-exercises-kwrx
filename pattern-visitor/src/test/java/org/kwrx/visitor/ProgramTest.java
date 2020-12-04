@@ -109,9 +109,6 @@ public class ProgramTest {
 
         });
 
-        program.define("clock", 0, ((interpreter, params) ->
-                new Number((double) (System.nanoTime() / 1000))));
-
         program.define("typestr", 1, ((interpreter, params) ->
                 new Text(params.get(0).getType())));
 
