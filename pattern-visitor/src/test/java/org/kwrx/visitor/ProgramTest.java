@@ -27,94 +27,272 @@ package org.kwrx.visitor;
 
 import org.junit.Test;
 import org.kwrx.visitor.interp.types.Nil;
-import org.kwrx.visitor.interp.types.Number;
 import org.kwrx.visitor.interp.types.Text;
 import org.kwrx.visitor.parser.ParsingException;
 import org.kwrx.visitor.parser.ScanningException;
 
 public class ProgramTest {
 
-    @Test
-    public void simpleCodeTest() throws ScanningException, ParsingException {
 
-        Program program = new Program (
+    private void runTest(String source) throws ParsingException, ScanningException {
+
+        new Program(source) {{
+
+            define("print", -1, (interpreter, params) -> {
+
+                for(var p : params)
+                    System.out.print(p.getValue());
+
+                System.out.println();
+                return Nil.value();
+
+            });
+
+            define("typestr", 1, ((interpreter, params) ->
+                    new Text(params.get(0).getType())));
+
+            define("hashstr", 1, ((interpreter, params) ->
+                    new Text(String.valueOf(params.get(0).hashCode()))));
+
+        }}.run();
+
+    }
+
+
+    @Test
+    public void simpleVisitorTest() throws ScanningException, ParsingException {
+
+        runTest (
                 """
-                            
+
                             class Visitor {
                                 fun visitA() {}
                                 fun visitB() {}
                                 fun visitC() {}
                             }
-                           
+
                             class Printer extends Visitor {
-                            
+
                                 fun visitA(A) {
                                     print("Ho visitato A = ", typestr(A));
                                 }
-                                
+
                                 fun visitB(B) {
                                     print("Ho visitato B = ", typestr(B));
                                 }
-                                
+
                                 fun visitC(C) {
                                     print("Ho visitato C = ", typestr(C));
                                 }
-                             
+
                             }
-                            
+
                             class V {
                                 fun accept(visitor) {}
                             }
-                            
+
                             class A extends V {
                                 fun accept(visitor) {
                                     visitor.visitA(this);
                                 }
                             }
-                            
+
                             class B extends V {
                                 fun accept(visitor) {
                                     visitor.visitB(this);
                                 }
                             }
-                                                        
+
                             class C extends V {
                                 fun accept(visitor) {
                                     visitor.visitC(this);
                                 }
                             }
-                                               
-                                               
-                            var printer = Printer();         
-                            
+
+
+                            var printer = Printer();
+
                             var vA = A();
                             var vB = B();
                             var vC = C();
-                            
+
                             vA.accept(printer);
                             vB.accept(printer);
                             vC.accept(printer);
-                             
+
                         """
         );
 
-
-        program.define("print", -1, (interpreter, params) -> {
-
-            for(var p : params)
-                System.out.print(p.getValue());
-
-            System.out.println();
-            return Nil.value();
-
-        });
-
-        program.define("typestr", 1, ((interpreter, params) ->
-                new Text(params.get(0).getType())));
-
-        program.run();
+    }
 
 
+    @Test
+    public void fibonacciRecursiveTest() throws ParsingException, ScanningException {
+        runTest(
+                """
+                        fun fib(x) {
+                            if(x < 2)
+                                return 1;
+                            else
+                                return fib(x - 1) * x;
+                        }
+                        
+                        print("fib(6): ", fib(6));
+                        
+                        """
+        );
+    }
+
+
+    @Test
+    public void codeTest01() throws ParsingException, ScanningException {
+        runTest("print('Hello World');");
+    }
+
+    @Test
+    public void codeTest02() throws ParsingException, ScanningException {
+        runTest("""
+                var x = 10.0;
+                var y = 15.0;
+                print(x + y - x * y / -x);
+                """);
+    }
+
+    @Test
+    public void codeTest03() throws ParsingException, ScanningException {
+        runTest("""
+
+                var x = 10.0;
+                var y = 15.0;
+                var z = x + y - x * y / x;
+
+                if(z > 10)
+                    print("z is greater");
+                else if(z < 10)
+                    print("z is lesser");
+                else
+                    print("z is equal");
+
+                """);
+    }
+
+    @Test
+    public void codeTest04() throws ParsingException, ScanningException {
+        runTest("""
+
+                var z = 0;
+
+                for(var i = 0; i < 10; i = i + 1)
+                    z = z + i;
+
+                while(z >= 10)
+                    z = z / 2;
+
+                """);
+    }
+
+    @Test
+    public void codeTest05() throws ParsingException, ScanningException {
+        runTest("""
+                
+                class A {
+                
+                    var initValue;
+                
+                    fun A(v) {
+                        this.initValue = v;
+                    }
+                    
+                    fun printValue() {
+                        print(this.initValue);
+                    }
+                    
+                }
+                
+                class B extends A {
+                
+                    fun B() {
+                        super(100);
+                    }
+                    
+                    fun printValue() {
+                        super.printValue();
+                    }
+                
+                }
+                
+                var b = B();
+                b.printValue();
+                
+                """);
+    }
+
+    @Test
+    public void codeTest06() throws ParsingException, ScanningException {
+        runTest("""
+                
+                fun returnTrue() {
+                    return true;
+                }
+                
+                if(returnTrue())
+                    print("Yes");
+                
+                """);
+    }
+
+    @Test
+    public void codeTest07() throws ParsingException, ScanningException {
+        runTest("""
+                
+                fun returnTrue() {
+                    return !true;
+                }
+                
+                if(returnTrue())
+                    print("Yes");
+                
+                """);
+    }
+
+
+
+    @Test
+    public void codeTest08() throws ParsingException, ScanningException {
+        runTest("""
+                
+                fun prova() {
+                    var x = 0;
+                    while(x < 10) {
+                        x = x + 1;
+                        return 0;
+                    }
+                    print("Not printed ", x);
+                }
+                
+                prova();
+                print("Printed");
+                
+                
+                """);
+    }
+
+
+    @Test
+    public void codeTest09() throws ParsingException, ScanningException {
+        runTest("""
+                
+                fun delegate (x) {
+                    return x;
+                }
+                
+                fun printValue(f) {
+                    print(f(30));
+                }
+                
+                printValue(delegate);        
+                
+                """);
     }
 
 }

@@ -18,6 +18,9 @@
 - [ ] Facade
 - [ ] Flyweight
 - [ ] Proxy
+
+### Behavioural
+- [x] Visitor
  
 ## Build
 
@@ -31,6 +34,7 @@
 # ├── pattern-prototype
 # ├── pattern-singleton
 # ├── pattern-bridge
+# ├── pattern-visitor
 # └── pattern-adapter
 ```
 

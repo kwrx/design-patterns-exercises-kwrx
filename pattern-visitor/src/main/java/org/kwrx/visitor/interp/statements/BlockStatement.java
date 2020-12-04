@@ -32,13 +32,19 @@ import java.util.List;
 public class BlockStatement extends Statement {
 
     private final List<Statement> statements;
+    private final boolean closure;
 
-    public BlockStatement(List<Statement> statements) {
+    public BlockStatement(List<Statement> statements, boolean closure) {
         this.statements = statements;
+        this.closure = closure;
     }
 
     public List<Statement> getStatements() {
         return statements;
+    }
+
+    public boolean isClosure() {
+        return closure;
     }
 
     @Override

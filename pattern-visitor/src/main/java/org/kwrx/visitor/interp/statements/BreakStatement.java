@@ -23,10 +23,13 @@
  *
  */
 
-public class Program {
+package org.kwrx.visitor.interp.statements;
 
-    public static void main(String... args) {
+import org.kwrx.visitor.interp.Statement;
 
+public class BreakStatement extends Statement {
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitBreakStatement(this);
     }
-
 }

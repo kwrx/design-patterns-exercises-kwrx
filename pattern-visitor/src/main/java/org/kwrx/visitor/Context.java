@@ -51,12 +51,6 @@ public class Context {
         this.thisClass = null;
     }
 
-    public Context(Context parent, Instance thisClass) {
-        this.defines = new HashMap<>();
-        this.parent = parent;
-        this.thisClass = thisClass;
-    }
-
 
     public Context getParent() {
         return parent;

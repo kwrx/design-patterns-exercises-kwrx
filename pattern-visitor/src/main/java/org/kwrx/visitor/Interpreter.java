@@ -59,15 +59,18 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
         executeBlock(statement, new Context(runningContext));
     }
 
+
     @Override
     public void visitExpressionStatement(ExpressionStatement statement) {
         eval(statement.getExpression());
     }
 
+
     @Override
     public void visitVariableStatement(VariableStatement statement) {
         runningContext.define(statement.getName(), eval(statement.getConstructor()));
     }
+
 
     @Override
     public void visitIfStatement(IfStatement statement) {
@@ -79,13 +82,19 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
     }
 
+
     @Override
     public void visitWhileStatement(WhileStatement statement) {
 
-        while(Dynamic.isTrue(eval(statement.getCondition())))
-            statement.getBody().accept(this);
+        try {
+
+            while(Dynamic.isTrue(eval(statement.getCondition())))
+                statement.getBody().accept(this);
+
+        } catch (BreakTrampoline ignored) {}
 
     }
+
 
     @Override
     public void visitForStatement(ForStatement statement) {
@@ -98,22 +107,31 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
                         new BlockStatement(Arrays.asList(
                                 statement.getBody(),
                                 statement.getIncrement()
-                        ))
+                        ), false)
                 )
 
-        )).accept(this);
+        ), false).accept(this);
 
     }
+
 
     @Override
     public void visitFunctionStatement(FunctionStatement statement) {
         runningContext.define(statement.getName(), new Symbol(createSymbolCallable(statement)));
     }
 
+
     @Override
     public void visitReturnStatement(ReturnStatement statement) {
         throw new ReturnTrampoline(eval(statement.getResult()));
     }
+
+
+    @Override
+    public void visitBreakStatement(BreakStatement statement) {
+        throw new BreakTrampoline();
+    }
+
 
     @Override
     public void visitClassStatement(ClassStatement statement) {
@@ -140,13 +158,16 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
                 }},
 
                 new LinkedHashMap<>() {{
-                        for (var loc : statement.getVariables())
-                            put(loc.getName(), eval(loc.getConstructor()));
+                        for (var var : statement.getVariables())
+                            put(var.getName(), eval(var.getConstructor()));
+
                 }}
 
         )));
 
     }
+
+
 
 
 
@@ -177,10 +198,12 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
     }
 
+
     @Override
     public Dynamic visitGroupingExpression(GroupingExpression e) {
         return eval(e.getExpression());
     }
+
 
     @Override
     public Dynamic visitLiteralExpression(LiteralExpression e) {
@@ -201,6 +224,7 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
     }
 
+
     @Override
     public Dynamic visitUnaryExpression(UnaryExpression e) {
 
@@ -219,21 +243,40 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
     }
 
+
     @Override
     public Dynamic visitVariableExpression(VariableExpression e) {
         return runningContext.resolve(e.getName());
     }
+
 
     @Override
     public Dynamic visitAssignExpression(AssignExpression e) {
         return runningContext.assign(e.getName(), eval(e.getValue()));
     }
 
+
     @Override
     public Dynamic visitInvokeExpression(InvokeExpression e) {
 
-        var fun = (Symbol) eval(e.getReference());
-        var sym = (SymbolCallable) fun.getSymbol();
+        var fun = (Dynamic) eval(e.getReference());
+        var ins = (Instance) null;
+        var sym = (SymbolCallable) null;
+
+
+        if (fun instanceof Instance) {
+
+            ins = ((Instance) fun);
+            sym = ((Instance) fun).getClassReference();
+
+        } else if (fun instanceof Symbol) {
+
+            ins = ((Symbol) fun).getInstance();
+            sym = ((Symbol) fun).getSymbol();
+
+        } else
+            throw new IllegalStateException("expected a symbol or instance for a invoke expression");
+
 
 
         if (sym.arity() != -1) {
@@ -243,13 +286,10 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
         }
 
-        return sym.call(
-                this,
-                fun.getInstance(),
-                e.getParams()
-                        .stream()
-                        .map(this::eval)
-                        .collect(Collectors.toList())
+        return sym.call(this, ins, e.getParams()
+                .stream()
+                .map(this::eval)
+                .collect(Collectors.toList())
         );
 
     }
@@ -275,6 +315,7 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
     }
 
+
     @Override
     public Dynamic visitSetFieldExpression(SetFieldExpression e) {
 
@@ -293,10 +334,12 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
         return runningContext.resolve(e.getThisToken());
     }
 
+
     @Override
     public Dynamic visitSuperExpression(SuperExpression e) {
         return runningContext.resolve(e.getSuperToken());
     }
+
 
     @Override
     public Dynamic visitNoopExpression(NoopExpression e) {
@@ -311,6 +354,7 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
         return e.accept(this);
     }
 
+
     private Dynamic executeBlock(BlockStatement statement, Context context) {
 
         Context parent = runningContext;
@@ -322,9 +366,12 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
             for (var s : statement.getStatements())
                 s.accept(this);
 
+        } catch (ReturnTrampoline returnTrampoline) {
 
-        } catch(ReturnTrampoline returnValue) {
-            return returnValue.getValue();
+            if(!statement.isClosure())
+                throw new ReturnTrampoline(returnTrampoline.getValue());
+
+            return returnTrampoline.getValue();
 
         } finally {
             runningContext = parent;
@@ -357,6 +404,7 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
     }
 
+
     private SymbolCallable createSymbolCallable(FunctionStatement statement) {
         return new SymbolCallable() {
 
@@ -377,7 +425,6 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
         };
     }
-
 
 
     public Context execute() {

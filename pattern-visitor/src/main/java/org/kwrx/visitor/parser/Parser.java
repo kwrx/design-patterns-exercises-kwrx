@@ -103,6 +103,7 @@ public class Parser {
         return parseAssignment();
     }
 
+
     private Expression parseAssignment() throws ParsingException {
 
         Expression left = parseEquality();
@@ -124,6 +125,7 @@ public class Parser {
 
     }
 
+
     private Expression parseEquality() throws ParsingException {
 
         Expression left = parseComparision();
@@ -134,6 +136,7 @@ public class Parser {
         return left;
 
     }
+
 
     private Expression parseComparision() throws ParsingException {
 
@@ -152,6 +155,7 @@ public class Parser {
 
     }
 
+
     private Expression parseTerm() throws ParsingException {
 
         Expression left = parseFactor();
@@ -162,6 +166,7 @@ public class Parser {
         return left;
 
     }
+
 
     private Expression parseFactor() throws ParsingException {
 
@@ -174,6 +179,7 @@ public class Parser {
 
     }
 
+
     private Expression parseUnary() throws ParsingException {
 
         if(matchNextTokens(TokenType.BANG) || matchNextTokens(TokenType.MINUS) || matchNextTokens(TokenType.AND))
@@ -182,6 +188,7 @@ public class Parser {
         return parseInvoke();
 
     }
+
 
     private Expression parseInvoke() throws ParsingException {
 
@@ -204,6 +211,7 @@ public class Parser {
 
     }
 
+
     private Expression parseParameters(Expression fun) throws ParsingException {
 
         List<Expression> params = new LinkedList<>();
@@ -221,6 +229,7 @@ public class Parser {
         return new InvokeExpression(fun, params);
 
     }
+
 
     private Expression parseGetField(Expression fun) throws ParsingException {
 
@@ -264,6 +273,8 @@ public class Parser {
 
 
 
+
+
     private Statement parseExpressionStatement() throws ParsingException {
 
         Expression e = parseExpression();
@@ -272,6 +283,7 @@ public class Parser {
         return new ExpressionStatement(e);
 
     }
+
 
     private VariableStatement parseVariableStatement() throws ParsingException {
 
@@ -287,10 +299,12 @@ public class Parser {
             constructor = new NoopExpression();
 
 
+
         checkSyntax(TokenType.SEMICOLON, "expected ';' after an expression");
         return new VariableStatement(name, constructor);
 
     }
+
 
     private IfStatement parseIfStatement() throws ParsingException {
 
@@ -312,6 +326,7 @@ public class Parser {
 
     }
 
+
     private WhileStatement parseWhileStatement() throws ParsingException {
 
         checkSyntax(TokenType.LEFT_PAREN, "expected '(' in a while statement");
@@ -321,6 +336,7 @@ public class Parser {
         return new WhileStatement(condition, parseStatement());
 
     }
+
 
     private ForStatement parseForStatement() throws ParsingException {
 
@@ -367,7 +383,8 @@ public class Parser {
 
     }
 
-    private BlockStatement parseBlockStatement() throws ParsingException {
+
+    private BlockStatement parseBlockStatement(boolean closure) throws ParsingException {
 
         var statements = new ArrayList<Statement>();
 
@@ -377,7 +394,7 @@ public class Parser {
         if(getPreviousToken().getType() != TokenType.RIGHT_BRACE)
             throw new ParsingException(getPreviousToken(), "expected '}' after a block statement");
 
-        return new BlockStatement(statements);
+        return new BlockStatement(statements, closure);
 
     }
 
@@ -387,7 +404,6 @@ public class Parser {
         checkSyntax(TokenType.IDENTIFIER, "expected identifier for a function declaration");
         Token name = getPreviousToken();
         checkSyntax(TokenType.LEFT_PAREN, "expected '(' after a function declaration");
-
 
         return new FunctionStatement(name, new LinkedList<>() {{
 
@@ -407,7 +423,7 @@ public class Parser {
 
             checkSyntax(TokenType.LEFT_BRACE, "expected '{' after a function declaration");
 
-        }}, parseBlockStatement());
+        }}, parseBlockStatement(true));
 
     }
 
@@ -430,6 +446,14 @@ public class Parser {
         return new ReturnStatement(result);
 
     }
+
+    private Statement parseBreakStatement() throws ParsingException {
+
+        checkSyntax(TokenType.SEMICOLON, "expected ';' after break statement");
+        return new BreakStatement();
+
+    }
+
 
     private Statement parseClassStatement() throws ParsingException {
 
@@ -472,7 +496,7 @@ public class Parser {
     private Statement parseStatement() throws ParsingException {
 
         if(matchNextTokens(TokenType.LEFT_BRACE))
-            return parseBlockStatement();
+            return parseBlockStatement(false);
 
         if(matchNextTokens(TokenType.CLASS))
             return parseClassStatement();
@@ -495,6 +519,9 @@ public class Parser {
         if(matchNextTokens(TokenType.RETURN))
             return parseReturnStatement();
 
+        if(matchNextTokens(TokenType.BREAK))
+            return parseBreakStatement();
+
         return parseExpressionStatement();
 
     }
@@ -508,8 +535,5 @@ public class Parser {
         }};
 
     }
-
-
-
 
 }

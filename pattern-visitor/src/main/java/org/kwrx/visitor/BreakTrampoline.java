@@ -23,10 +23,8 @@
  *
  */
 
-public class Program {
+package org.kwrx.visitor;
 
-    public static void main(String... args) {
-
-    }
+public class BreakTrampoline extends RuntimeException {
 
 }

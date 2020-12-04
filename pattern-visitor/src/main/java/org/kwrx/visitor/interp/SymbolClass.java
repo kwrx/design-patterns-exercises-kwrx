@@ -70,6 +70,10 @@ public class SymbolClass implements SymbolCallable {
     }
 
 
+    public Token getName() {
+        return name;
+    }
+
     public Map<Token, Symbol> getMethods() {
         return methods;
     }
@@ -94,7 +98,10 @@ public class SymbolClass implements SymbolCallable {
     @Override
     public Dynamic call(Interpreter interpreter, Instance instance, List<Dynamic> params) {
 
-        var newInstance = new Instance(this);
+        var newInstance = instance;
+
+        if(newInstance == null)
+            newInstance = new Instance(this);
 
         if(getConstructor() != null)
             getConstructor().call(interpreter, newInstance, params);

@@ -49,10 +49,12 @@ public class Instance extends Dynamic {
             putAll(classReference.getMethods());
         }};
 
+
         if(classReference.getSuperClass() != null)
             parent = new Instance(classReference.getSuperClass());
         else
             parent = null;
+
 
     }
 
