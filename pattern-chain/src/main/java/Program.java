@@ -29,7 +29,6 @@ import org.kwrx.chain.KeyEventHandler;
 import org.kwrx.chain.MouseEvent;
 import org.kwrx.chain.MouseEventHandler;
 import org.kwrx.chain.event.EventHandler;
-import org.kwrx.chain.listeners.MouseListener;
 
 public class Program {
 
