@@ -41,9 +41,9 @@ public class ProgramTest {
             define("print", -1, (interpreter, params) -> {
 
                 for(var p : params)
-                    System.out.print(p.getValue());
+                    System.err.print(p.getValue());
 
-                System.out.println();
+                System.err.println();
                 return Nil.value();
 
             });
@@ -137,11 +137,14 @@ public class ProgramTest {
                                 return fib(x - 1) * x;
                         }
                         
-                        print("fib(6): ", fib(6));
+                        var n = 10;
+                        print("fib(", n, "): ", fib(n));
                         
                         """
         );
     }
+
+
 
 
     @Test
