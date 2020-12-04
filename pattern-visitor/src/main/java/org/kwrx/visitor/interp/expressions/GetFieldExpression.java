@@ -23,29 +23,33 @@
  *
  */
 
-package org.kwrx.visitor.interp;
+package org.kwrx.visitor.interp.expressions;
 
-import org.kwrx.visitor.interp.expressions.*;
+import org.kwrx.visitor.interp.Expression;
 import org.kwrx.visitor.interp.types.Dynamic;
+import org.kwrx.visitor.parser.Token;
 
-public abstract class Expression {
+public class GetFieldExpression extends Expression {
 
-    public interface Visitor {
-        Dynamic visitBinaryExpression(BinaryExpression e);
-        Dynamic visitGroupingExpression(GroupingExpression e);
-        Dynamic visitLiteralExpression(LiteralExpression e);
-        Dynamic visitUnaryExpression(UnaryExpression e);
-        Dynamic visitVariableExpression(VariableExpression e);
-        Dynamic visitAssignExpression(AssignExpression e);
-        Dynamic visitNoopExpression(NoopExpression e);
-        Dynamic visitInvokeExpression(InvokeExpression e);
-        Dynamic visitGetFieldExpression(GetFieldExpression e);
-        Dynamic visitSetFieldExpression(SetFieldExpression e);
-        Dynamic visitThisExpression(ThisExpression e);
-        Dynamic visitSuperExpression(SuperExpression e);
+    private final Expression instance;
+    private final Token field;
+
+    public GetFieldExpression(Expression instance, Token field) {
+        this.instance = instance;
+        this.field = field;
     }
 
+    public Expression getInstance() {
+        return instance;
+    }
 
-    public abstract Dynamic accept(Expression.Visitor visitor);
+    public Token getField() {
+        return field;
+    }
+
+    @Override
+    public Dynamic accept(Visitor visitor) {
+        return visitor.visitGetFieldExpression(this);
+    }
 
 }

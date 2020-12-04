@@ -26,10 +26,17 @@
 package org.kwrx.visitor.interp;
 
 import org.kwrx.visitor.Interpreter;
+import org.kwrx.visitor.interp.statements.FunctionStatement;
 import org.kwrx.visitor.interp.types.Dynamic;
+import org.kwrx.visitor.interp.types.Instance;
+import org.kwrx.visitor.parser.Token;
 
 import java.util.List;
 
-public interface FunctionCallable {
-    Dynamic call(Interpreter interpreter, List<Dynamic> params);
+public interface SymbolCallable {
+
+    Dynamic call(Interpreter interpreter, Instance instance, List<Dynamic> params);
+    Token name();
+    int arity();
+
 }

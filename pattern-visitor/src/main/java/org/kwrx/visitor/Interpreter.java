@@ -25,17 +25,16 @@
 
 package org.kwrx.visitor;
 
-import org.kwrx.visitor.interp.Expression;
-import org.kwrx.visitor.interp.FunctionSymbol;
-import org.kwrx.visitor.interp.Statement;
+import org.kwrx.visitor.interp.*;
 import org.kwrx.visitor.interp.expressions.*;
 import org.kwrx.visitor.interp.statements.*;
 import org.kwrx.visitor.interp.types.*;
 import org.kwrx.visitor.interp.types.Number;
+import org.kwrx.visitor.parser.Token;
 import org.kwrx.visitor.parser.TokenType;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -105,23 +104,45 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
     @Override
     public void visitFunctionStatement(FunctionStatement statement) {
-
-        runningContext.define(statement.getName(), new Function(new FunctionSymbol(statement.getName(), statement.getParams().size(), (interpreter, params) -> {
-
-            Context context = new Context(runningContext);
-
-            for (int i = 0; i < params.size(); i++)
-                context.define(statement.getParams().get(i), params.get(i));
-
-            return interpreter.executeBlock(statement.getBody(), context);
-
-        })));
-
+        runningContext.define(statement.getName(), new Symbol(createSymbolCallable(statement)));
     }
 
     @Override
     public void visitReturnStatement(ReturnStatement statement) {
-        throw new Return(eval(statement.getResult()));
+        throw new ReturnTrampoline(eval(statement.getResult()));
+    }
+
+    @Override
+    public void visitClassStatement(ClassStatement statement) {
+
+        SymbolClass superclass = null;
+
+        if(statement.getSuperclass() != null) {
+
+            var resolved = runningContext.resolve(statement.getSuperclass()).getValue();
+
+            if(!(resolved instanceof SymbolClass))
+                throw new RunningException(statement.getSuperclass(), "expected superclass be a class");
+
+            superclass = (SymbolClass) resolved;
+
+        }
+
+
+        runningContext.define(statement.getName(), new Symbol(new SymbolClass(statement.getName(), superclass,
+
+                new LinkedHashMap<>() {{
+                        for (var fun : statement.getMethods())
+                            put(fun.getName(), new Symbol(createSymbolCallable(fun)));
+                }},
+
+                new LinkedHashMap<>() {{
+                        for (var loc : statement.getVariables())
+                            put(loc.getName(), eval(loc.getConstructor()));
+                }}
+
+        )));
+
     }
 
 
@@ -208,21 +229,70 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
     @Override
     public Dynamic visitInvokeExpression(InvokeExpression e) {
 
-        var fun = (Function) eval(e.getReference());
-        var sym = (FunctionSymbol) fun.getFunction();
+        var fun = (Symbol) eval(e.getReference());
+        var sym = (SymbolCallable) fun.getSymbol();
 
-        if (sym.getArity() != FunctionSymbol.VARARGS && e.getParams().size() != sym.getArity())
-            throw new RunningException(sym.getName(), String.format("too many or too few arguments, expected %d, given %d", sym.getArity(), e.getParams().size()));
 
+        if (sym.arity() != -1) {
+
+            if (e.getParams().size() != sym.arity())
+                throw new RunningException(sym.name(), String.format("too many or too few arguments, expected %d, given %d", sym.arity(), e.getParams().size()));
+
+        }
 
         return sym.call(
                 this,
+                fun.getInstance(),
                 e.getParams()
                         .stream()
                         .map(this::eval)
                         .collect(Collectors.toList())
         );
 
+    }
+
+
+    @Override
+    public Dynamic visitGetFieldExpression(GetFieldExpression e) {
+
+        var instance = eval(e.getInstance());
+
+        if(instance instanceof Instance) {
+
+            var field = ((Instance) instance).getField(e.getField());
+
+            if(field instanceof Symbol)
+                ((Symbol) field).bind((Instance) instance);
+
+            return field;
+
+        }
+
+        throw new RunningException(e.getField(), "expected an instance");
+
+    }
+
+    @Override
+    public Dynamic visitSetFieldExpression(SetFieldExpression e) {
+
+        var instance = eval(e.getInstance());
+
+        if(instance instanceof Instance)
+            return ((Instance) instance).setField(e.getField(), eval(e.getValue()));
+
+        throw new RunningException(e.getField(), String.format("expected an instance, given %s", instance.getType()));
+
+    }
+
+
+    @Override
+    public Dynamic visitThisExpression(ThisExpression e) {
+        return runningContext.resolve(e.getThisToken());
+    }
+
+    @Override
+    public Dynamic visitSuperExpression(SuperExpression e) {
+        return runningContext.resolve(e.getSuperToken());
     }
 
     @Override
@@ -250,7 +320,7 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
                 s.accept(this);
 
 
-        } catch(Return returnValue) {
+        } catch(ReturnTrampoline returnValue) {
             return returnValue.getValue();
 
         } finally {
@@ -260,6 +330,49 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
         return Nil.value();
 
+    }
+
+
+    private Dynamic executeFunction(FunctionStatement statement, Interpreter interpreter, Instance instance, List<Dynamic> params) {
+
+        Context context = new Context(runningContext);
+
+        if(instance != null) {
+
+            context.define(new Token(TokenType.THIS, "this", null, 0, 0), instance);
+
+            if(instance.getParent() != null)
+                context.define(new Token(TokenType.SUPER, "super", null, 0, 0), instance.getParent());
+
+        }
+
+
+        for (int i = 0; i < params.size(); i++)
+            context.define(statement.getParams().get(i), params.get(i));
+
+        return interpreter.executeBlock(statement.getBody(), context);
+
+    }
+
+    private SymbolCallable createSymbolCallable(FunctionStatement statement) {
+        return new SymbolCallable() {
+
+            @Override
+            public Dynamic call(Interpreter interpreter, Instance instance, List<Dynamic> params) {
+                return interpreter.executeFunction(statement, interpreter, instance, params);
+            }
+
+            @Override
+            public Token name() {
+                return statement.getName();
+            }
+
+            @Override
+            public int arity() {
+                return statement.getParams().size();
+            }
+
+        };
     }
 
 

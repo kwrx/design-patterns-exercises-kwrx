@@ -25,10 +25,14 @@
 
 package org.kwrx.visitor;
 
-import org.kwrx.visitor.interp.types.Function;
-import org.kwrx.visitor.interp.FunctionCallable;
-import org.kwrx.visitor.interp.FunctionSymbol;
+import org.kwrx.visitor.interp.types.Dynamic;
+import org.kwrx.visitor.interp.types.Instance;
+import org.kwrx.visitor.interp.types.Symbol;
+import org.kwrx.visitor.interp.SymbolCallable;
 import org.kwrx.visitor.parser.*;
+
+import java.util.List;
+import java.util.concurrent.Callable;
 
 public class Program {
 
@@ -41,13 +45,30 @@ public class Program {
     }
 
 
-    public void define(String name, int arity, FunctionCallable callable) {
+    public void define(String name, int arity, NativeCallable callable) {
 
         var token = new Token(TokenType.IDENTIFIER, name, null, 0, 0);
 
         context.define(
                 token,
-                new Function(new FunctionSymbol(token, arity, callable))
+                new Symbol(new SymbolCallable() {
+
+                    @Override
+                    public Dynamic call(Interpreter interpreter, Instance instance, List<Dynamic> params) {
+                        return callable.call(interpreter, params);
+                    }
+
+                    @Override
+                    public Token name() {
+                        return token;
+                    }
+
+                    @Override
+                    public int arity() {
+                        return arity;
+                    }
+
+                })
         );
 
     }

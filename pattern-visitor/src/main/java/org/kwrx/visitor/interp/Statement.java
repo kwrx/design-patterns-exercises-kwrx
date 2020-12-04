@@ -38,6 +38,7 @@ public abstract class Statement {
         void visitForStatement(ForStatement statement);
         void visitFunctionStatement(FunctionStatement statement);
         void visitReturnStatement(ReturnStatement statement);
+        void visitClassStatement(ClassStatement statement);
     }
 
     public abstract void accept(Statement.Visitor visitor);

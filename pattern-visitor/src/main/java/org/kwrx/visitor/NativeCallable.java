@@ -23,23 +23,12 @@
  *
  */
 
-package org.kwrx.visitor.interp.types;
+package org.kwrx.visitor;
 
-import org.kwrx.visitor.interp.FunctionSymbol;
+import org.kwrx.visitor.interp.types.Dynamic;
+import java.util.List;
 
-public class Function extends Dynamic {
 
-    public Function(Object value) {
-        super(value);
-    }
-
-    public FunctionSymbol getFunction() {
-        return (FunctionSymbol) getValue();
-    }
-
-    @Override
-    public String getType() {
-        return "<function>";
-    }
-
+public interface NativeCallable {
+    Dynamic call(Interpreter interpreter, List<Dynamic> params);
 }

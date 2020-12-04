@@ -23,29 +23,34 @@
  *
  */
 
-package org.kwrx.visitor.interp;
+package org.kwrx.visitor.interp.types;
 
-import org.kwrx.visitor.interp.expressions.*;
-import org.kwrx.visitor.interp.types.Dynamic;
+import org.kwrx.visitor.interp.SymbolCallable;
 
-public abstract class Expression {
+public class Symbol extends Dynamic {
 
-    public interface Visitor {
-        Dynamic visitBinaryExpression(BinaryExpression e);
-        Dynamic visitGroupingExpression(GroupingExpression e);
-        Dynamic visitLiteralExpression(LiteralExpression e);
-        Dynamic visitUnaryExpression(UnaryExpression e);
-        Dynamic visitVariableExpression(VariableExpression e);
-        Dynamic visitAssignExpression(AssignExpression e);
-        Dynamic visitNoopExpression(NoopExpression e);
-        Dynamic visitInvokeExpression(InvokeExpression e);
-        Dynamic visitGetFieldExpression(GetFieldExpression e);
-        Dynamic visitSetFieldExpression(SetFieldExpression e);
-        Dynamic visitThisExpression(ThisExpression e);
-        Dynamic visitSuperExpression(SuperExpression e);
+    private Instance instance;
+
+    public Symbol(Object value) {
+        super(value);
+        instance = null;
     }
 
+    public void bind(Instance instance) {
+        this.instance = instance;
+    }
 
-    public abstract Dynamic accept(Expression.Visitor visitor);
+    public Instance getInstance() {
+        return instance;
+    }
+
+    public SymbolCallable getSymbol() {
+        return (SymbolCallable) getValue();
+    }
+
+    @Override
+    public String getType() {
+        return "<symbol>";
+    }
 
 }

@@ -111,8 +111,12 @@ public class Parser {
 
             if(left instanceof VariableExpression)
                 return new AssignExpression(((VariableExpression) left).getName(), parseAssignment());
-            else
-                throw new ParsingException(getPreviousToken(), "expected a valid variable name");
+
+            if(left instanceof GetFieldExpression)
+                return new SetFieldExpression(((GetFieldExpression) left).getInstance(), ((GetFieldExpression) left).getField(), parseAssignment());
+
+
+            throw new ParsingException(getPreviousToken(), "expected a valid variable name");
 
         }
 
@@ -183,8 +187,18 @@ public class Parser {
 
         Expression fun = parsePrimary();
 
-        while(matchNextTokens(TokenType.LEFT_PAREN))
-            fun = parseParameters(fun);
+        while(isNotEOF()) {
+
+            if(matchNextTokens(TokenType.LEFT_PAREN))
+                fun = parseParameters(fun);
+
+            else if(matchNextTokens(TokenType.DOT))
+                fun = parseGetField(fun);
+
+            else
+                break;
+
+        }
 
         return fun;
 
@@ -208,6 +222,14 @@ public class Parser {
 
     }
 
+    private Expression parseGetField(Expression fun) throws ParsingException {
+
+        checkSyntax(TokenType.IDENTIFIER, "expected an identifier for a field name");
+        return new GetFieldExpression(fun, getPreviousToken());
+
+    }
+
+
     private Expression parsePrimary() throws ParsingException {
 
 
@@ -226,6 +248,8 @@ public class Parser {
             case TRUE  -> new LiteralExpression(true);
             case FALSE -> new LiteralExpression(false);
             case NIL   -> new LiteralExpression(null);
+            case THIS  -> new ThisExpression(getPreviousToken());
+            case SUPER -> new SuperExpression(getPreviousToken());
             case NUMBER, STRING -> new LiteralExpression(getPreviousToken().getLiteral());
             case IDENTIFIER -> new VariableExpression(getPreviousToken());
 
@@ -249,7 +273,7 @@ public class Parser {
 
     }
 
-    private Statement parseVariableStatement() throws ParsingException {
+    private VariableStatement parseVariableStatement() throws ParsingException {
 
         checkSyntax(TokenType.IDENTIFIER, "expected variable name in declaration");
 
@@ -407,11 +431,51 @@ public class Parser {
 
     }
 
+    private Statement parseClassStatement() throws ParsingException {
+
+        checkSyntax(TokenType.IDENTIFIER, "expected an identifier for class name");
+
+        Token name = getPreviousToken();
+        Token superclass = null;
+
+        if(matchNextTokens(TokenType.EXTENDS)) {
+
+            checkSyntax(TokenType.IDENTIFIER, "expected an identifier for a superclass name");
+            superclass = getPreviousToken();
+
+        }
+
+        checkSyntax(TokenType.LEFT_BRACE, "expected '{' for a class declaration");
+
+        var methods = new LinkedList<FunctionStatement>();
+        var variables = new LinkedList<VariableStatement>();
+
+        while(isNotEOF()) {
+
+            if(matchNextTokens(TokenType.FUN))
+                methods.add(parseFunctionStatement());
+
+            else if(matchNextTokens(TokenType.VAR))
+                variables.add(parseVariableStatement());
+
+            else
+                break;
+
+        }
+
+        checkSyntax(TokenType.RIGHT_BRACE, "expected '}' at the end of class declaration");
+        return new ClassStatement(name, superclass, methods, variables);
+
+    }
+
 
     private Statement parseStatement() throws ParsingException {
 
         if(matchNextTokens(TokenType.LEFT_BRACE))
             return parseBlockStatement();
+
+        if(matchNextTokens(TokenType.CLASS))
+            return parseClassStatement();
 
         if(matchNextTokens(TokenType.FUN))
             return parseFunctionStatement();

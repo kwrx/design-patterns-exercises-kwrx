@@ -26,7 +26,6 @@
 package org.kwrx.visitor;
 
 import org.junit.Test;
-import org.kwrx.visitor.interp.FunctionSymbol;
 import org.kwrx.visitor.interp.types.Nil;
 import org.kwrx.visitor.interp.types.Number;
 import org.kwrx.visitor.interp.types.Text;
@@ -41,28 +40,66 @@ public class ProgramTest {
         Program program = new Program (
                 """
                             
-                            fun fib(x) {
+                            class Visitor {
+                                fun visitA() {}
+                                fun visitB() {}
+                                fun visitC() {}
+                            }
+                           
+                            class Printer extends Visitor {
                             
-                                if(x < 2)
-                                    return 1;
-                                else
-                                    return fib(x - 1) * x;
-                            
+                                fun visitA(A) {
+                                    print("Ho visitato A = ", typestr(A));
+                                }
+                                
+                                fun visitB(B) {
+                                    print("Ho visitato B = ", typestr(B));
+                                }
+                                
+                                fun visitC(C) {
+                                    print("Ho visitato C = ", typestr(C));
+                                }
+                             
                             }
                             
-                            var number = 10;
+                            class V {
+                                fun accept(visitor) {}
+                            }
                             
-                            var t0 = clock();
-                            var rs = fib(number);
-                            var t1 = clock();
+                            class A extends V {
+                                fun accept(visitor) {
+                                    visitor.visitA(this);
+                                }
+                            }
                             
-                            print("Fibonacci per ", number, " = ", rs);
-                            print("Time: ", t1 - t0, "us");               
+                            class B extends V {
+                                fun accept(visitor) {
+                                    visitor.visitB(this);
+                                }
+                            }
+                                                        
+                            class C extends V {
+                                fun accept(visitor) {
+                                    visitor.visitC(this);
+                                }
+                            }
+                                               
+                                               
+                            var printer = Printer();         
+                            
+                            var vA = A();
+                            var vB = B();
+                            var vC = C();
+                            
+                            vA.accept(printer);
+                            vB.accept(printer);
+                            vC.accept(printer);
                              
                         """
         );
 
-        program.define("print", FunctionSymbol.VARARGS, (interpreter, params) -> {
+
+        program.define("print", -1, (interpreter, params) -> {
 
             for(var p : params)
                 System.out.print(p.getValue());

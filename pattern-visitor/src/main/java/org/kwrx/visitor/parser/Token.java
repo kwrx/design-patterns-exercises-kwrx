@@ -25,6 +25,8 @@
 
 package org.kwrx.visitor.parser;
 
+import java.util.Objects;
+
 public class Token {
 
     private final TokenType type;
@@ -63,6 +65,21 @@ public class Token {
 
     public String toString() {
         return String.format("%s %s %s", type, lexeme, literal);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Token token = (Token) o;
+        return getType() == token.getType() &&
+                getLexeme().equals(token.getLexeme()) &&
+                Objects.equals(getLiteral(), token.getLiteral());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getType(), getLexeme(), getLiteral());
     }
 
 }

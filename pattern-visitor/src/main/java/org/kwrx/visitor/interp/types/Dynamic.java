@@ -67,7 +67,7 @@ public class Dynamic {
         if(left instanceof Nil)
             return false;
 
-        return left.equals(right);
+        return left.getValue().equals(right.getValue());
 
     }
 

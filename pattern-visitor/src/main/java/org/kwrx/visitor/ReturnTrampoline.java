@@ -23,45 +23,20 @@
  *
  */
 
-package org.kwrx.visitor.interp;
+package org.kwrx.visitor;
 
-import org.kwrx.visitor.Context;
-import org.kwrx.visitor.Interpreter;
 import org.kwrx.visitor.interp.types.Dynamic;
-import org.kwrx.visitor.parser.Token;
 
-import java.util.List;
+public class ReturnTrampoline extends RuntimeException {
 
-public class FunctionSymbol {
+    private final Dynamic value;
 
-    public static final int VARARGS = -1;
-
-    private final Token name;
-    private final int arity;
-    private final FunctionCallable callable;
-
-    public FunctionSymbol(Token name, int arity, FunctionCallable callable) {
-        this.name = name;
-        this.arity = arity;
-        this.callable = callable;
+    public ReturnTrampoline(Dynamic value) {
+        this.value = value;
     }
 
-    public Token getName() {
-        return name;
-    }
-
-    public int getArity() {
-        return arity;
-    }
-
-
-    @Override
-    public String toString() {
-        return String.format("<%s>", getName().getLexeme());
-    }
-
-    public Dynamic call(Interpreter interpreter, List<Dynamic> params) {
-        return callable.call(interpreter, params);
+    public Dynamic getValue() {
+        return value;
     }
 
 }
