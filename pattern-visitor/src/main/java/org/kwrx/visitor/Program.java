@@ -25,14 +25,13 @@
 
 package org.kwrx.visitor;
 
+import org.kwrx.visitor.interp.SymbolCallable;
 import org.kwrx.visitor.interp.types.Dynamic;
 import org.kwrx.visitor.interp.types.Instance;
 import org.kwrx.visitor.interp.types.Symbol;
-import org.kwrx.visitor.interp.SymbolCallable;
 import org.kwrx.visitor.parser.*;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
 public class Program {
 

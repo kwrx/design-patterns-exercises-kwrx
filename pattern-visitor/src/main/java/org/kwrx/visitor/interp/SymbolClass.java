@@ -26,7 +26,6 @@
 package org.kwrx.visitor.interp;
 
 import org.kwrx.visitor.Interpreter;
-import org.kwrx.visitor.RunningException;
 import org.kwrx.visitor.interp.types.Dynamic;
 import org.kwrx.visitor.interp.types.Instance;
 import org.kwrx.visitor.interp.types.Symbol;

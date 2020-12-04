@@ -25,8 +25,6 @@
 
 package org.kwrx.visitor.interp.types;
 
-import org.kwrx.visitor.RunningException;
-
 public class Dynamic {
 
     private final Object value;

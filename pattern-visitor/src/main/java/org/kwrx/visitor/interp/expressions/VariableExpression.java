@@ -25,9 +25,9 @@
 
 package org.kwrx.visitor.interp.expressions;
 
+import org.kwrx.visitor.interp.Expression;
 import org.kwrx.visitor.interp.types.Dynamic;
 import org.kwrx.visitor.parser.Token;
-import org.kwrx.visitor.interp.Expression;
 
 public class VariableExpression extends Expression {
 

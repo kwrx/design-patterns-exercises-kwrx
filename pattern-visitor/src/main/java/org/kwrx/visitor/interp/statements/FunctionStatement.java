@@ -25,9 +25,9 @@
 
 package org.kwrx.visitor.interp.statements;
 
-import org.kwrx.visitor.Context;
 import org.kwrx.visitor.interp.Statement;
 import org.kwrx.visitor.parser.Token;
+
 import java.util.List;
 
 public class FunctionStatement extends Statement {

@@ -25,11 +25,14 @@
 
 package org.kwrx.visitor;
 
-import org.kwrx.visitor.interp.*;
+import org.kwrx.visitor.interp.Expression;
+import org.kwrx.visitor.interp.Statement;
+import org.kwrx.visitor.interp.SymbolCallable;
+import org.kwrx.visitor.interp.SymbolClass;
 import org.kwrx.visitor.interp.expressions.*;
 import org.kwrx.visitor.interp.statements.*;
-import org.kwrx.visitor.interp.types.*;
 import org.kwrx.visitor.interp.types.Number;
+import org.kwrx.visitor.interp.types.*;
 import org.kwrx.visitor.parser.Token;
 import org.kwrx.visitor.parser.TokenType;
 

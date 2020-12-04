@@ -29,7 +29,8 @@ import org.kwrx.visitor.RunningException;
 import org.kwrx.visitor.interp.SymbolClass;
 import org.kwrx.visitor.parser.Token;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Instance extends Dynamic {

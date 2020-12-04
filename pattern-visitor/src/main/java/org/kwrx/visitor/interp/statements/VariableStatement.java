@@ -25,9 +25,9 @@
 
 package org.kwrx.visitor.interp.statements;
 
-import org.kwrx.visitor.parser.Token;
 import org.kwrx.visitor.interp.Expression;
 import org.kwrx.visitor.interp.Statement;
+import org.kwrx.visitor.parser.Token;
 
 public class VariableStatement extends Statement {
 
