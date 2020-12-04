@@ -23,7 +23,7 @@
  *
  */
 
-package org.kwrx.visitor;
+package org.kwrx.prototype;
 
 import javafx.scene.image.Image;
 

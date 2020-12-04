@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,15 +23,42 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.chain;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
-include 'pattern-adapter'
-include 'pattern-visitor'
-include 'pattern-chain'
+import org.kwrx.chain.event.Event;
+import org.kwrx.chain.event.EventHandler;
+import org.kwrx.chain.listeners.MouseListener;
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class MouseEventHandler extends EventHandler {
+
+    private final List<MouseListener> mouseListeners;
+
+    public MouseEventHandler(EventHandler next) {
+        super(next);
+        mouseListeners = new LinkedList<>();
+    }
+
+
+    public void addListener(MouseListener mouseListener) {
+        mouseListeners.add(mouseListener);
+    }
+
+    @Override
+    public void handle(Event event) {
+
+        if(event instanceof MouseEvent && mouseListeners.size() > 0) {
+
+            for(var listener : mouseListeners)
+                listener.handle((MouseEvent) event);
+
+        } else {
+
+            super.handle(event);
+
+        }
+
+    }
+}

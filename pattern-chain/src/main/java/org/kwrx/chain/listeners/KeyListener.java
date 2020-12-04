@@ -23,15 +23,10 @@
  *
  */
 
-package org.kwrx.visitor;
+package org.kwrx.chain.listeners;
 
+import org.kwrx.chain.KeyEvent;
 
-import javafx.scene.image.Image;
-import org.kwrx.shared.Resources;
-
-
-public class BlackCat extends HalloweenObjectPrototype {
-    public BlackCat() {
-        setImage(new Image(Resources.getURL(this, "/assets/images/blackcat.png").toExternalForm()));
-    }
+public interface KeyListener {
+    void handle(KeyEvent e);
 }

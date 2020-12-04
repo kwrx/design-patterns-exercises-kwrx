@@ -27,9 +27,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import org.kwrx.visitor.Bat;
-import org.kwrx.visitor.BlackCat;
-import org.kwrx.visitor.Pumpkin;
+import org.kwrx.prototype.Bat;
+import org.kwrx.prototype.BlackCat;
+import org.kwrx.prototype.Pumpkin;
 import org.kwrx.shared.Resources;
 
 import java.net.URL;

@@ -86,7 +86,7 @@ public class ProgramTest {
                                 }
 
                             }
-
+                            
                             class V {
                                 fun accept(visitor) {}
                             }
@@ -275,7 +275,6 @@ public class ProgramTest {
                 
                 prova();
                 print("Printed");
-                
                 
                 """);
     }

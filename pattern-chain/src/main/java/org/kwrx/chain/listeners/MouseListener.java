@@ -23,13 +23,11 @@
  *
  */
 
-package org.kwrx.visitor;
+package org.kwrx.chain.listeners;
 
-import javafx.scene.image.Image;
-import org.kwrx.shared.Resources;
 
-public class Bat extends HalloweenObjectPrototype {
-    public Bat() {
-        setImage(new Image(Resources.getURL(this, "/assets/images/bat.png").toExternalForm()));
-    }
+import org.kwrx.chain.MouseEvent;
+
+public interface MouseListener {
+    void handle(MouseEvent e);
 }

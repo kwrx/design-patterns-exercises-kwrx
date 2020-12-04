@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,15 +23,26 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.chain;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
-include 'pattern-adapter'
-include 'pattern-visitor'
-include 'pattern-chain'
+import org.kwrx.chain.event.Event;
+
+public class MouseEvent extends Event {
+
+    private final int x;
+    private final int y;
+
+    public MouseEvent(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+}

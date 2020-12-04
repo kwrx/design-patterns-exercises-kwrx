@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,15 +23,8 @@
  *
  */
 
-rootProject.name = 'design-patterns-exercies-kwrx'
+package org.kwrx.chain.event;
 
-include 'shared'
-include 'pattern-abstract-method'
-include 'pattern-abstract-factory'
-include 'pattern-builder'
-include 'pattern-prototype'
-include 'pattern-singleton'
-include 'pattern-bridge'
-include 'pattern-adapter'
-include 'pattern-visitor'
-include 'pattern-chain'
+public class Event {
+
+}
