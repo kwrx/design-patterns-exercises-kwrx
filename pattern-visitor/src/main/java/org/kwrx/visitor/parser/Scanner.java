@@ -105,7 +105,7 @@ public class Scanner {
         while(isNotEOF() && ((ch = getNextChar()) != delimiter)) {
 
             if(ch == '\n')
-                throw new ScanningException(line, column, "Unexpected end of line when parsing a string literal");
+                throw new ScanningException(line, column, "unexpected end of line when parsing a string literal");
 
             stringBuilder.append(ch);
 
@@ -170,9 +170,13 @@ public class Scanner {
                     case "break"   -> TokenType.BREAK;
                     case "return"  -> TokenType.RETURN;
 
+                    case "is"      -> TokenType.IS;
+                    case "or"      -> TokenType.OR;
+                    case "and"     -> TokenType.AND;
+
                     case "true"    -> TokenType.TRUE;
                     case "false"   -> TokenType.FALSE;
-                    case "nil"     -> TokenType.NIL;
+                    case "null"    -> TokenType.NULL;
 
                     default -> TokenType.IDENTIFIER;
 
@@ -213,9 +217,6 @@ public class Scanner {
             case '>' -> addToken(matchNextChars('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
             case '<' -> addToken(matchNextChars('=') ? TokenType.LESS_EQUAL    : TokenType.LESS);
 
-            case '&' -> addToken(TokenType.AND);
-            case '|' -> addToken(TokenType.OR);
-
 
             case '"', '\'' -> addString(ch);
 
@@ -229,7 +230,7 @@ public class Scanner {
                 else if(Character.isLetter(ch))
                     addIdentifier();
                 else
-                    throw new ScanningException(line, column, String.format("Unexpected character: %s", ch));
+                    throw new ScanningException(line, column, String.format("unexpected character: %s", ch));
 
 
             }

@@ -26,7 +26,7 @@
 package org.kwrx.visitor;
 
 import org.junit.Test;
-import org.kwrx.visitor.interp.types.Nil;
+import org.kwrx.visitor.interp.types.Null;
 import org.kwrx.visitor.interp.types.Text;
 import org.kwrx.visitor.parser.ParsingException;
 import org.kwrx.visitor.parser.ScanningException;
@@ -44,7 +44,7 @@ public class ProgramTest {
                     System.err.print(p.getValue());
 
                 System.err.println();
-                return Nil.value();
+                return Null.value();
 
             });
 
@@ -66,9 +66,9 @@ public class ProgramTest {
                 """
 
                             class Visitor {
-                                fun visitA() {}
-                                fun visitB() {}
-                                fun visitC() {}
+                                fun visitA();
+                                fun visitB();
+                                fun visitC();
                             }
 
                             class Printer extends Visitor {
@@ -87,8 +87,9 @@ public class ProgramTest {
 
                             }
                             
+                            
                             class V {
-                                fun accept(visitor) {}
+                                fun accept(visitor);
                             }
 
                             class A extends V {
@@ -112,14 +113,15 @@ public class ProgramTest {
 
                             var printer = Printer();
 
-                            var vA = A();
-                            var vB = B();
-                            var vC = C();
+                            var a = A();
+                            var b = B();
+                            var c = C();
 
-                            vA.accept(printer);
-                            vB.accept(printer);
-                            vC.accept(printer);
-
+                            a.accept(printer);
+                            b.accept(printer);
+                            c.accept(printer);
+                            
+                            
                         """
         );
 
@@ -130,6 +132,7 @@ public class ProgramTest {
     public void fibonacciRecursiveTest() throws ParsingException, ScanningException {
         runTest(
                 """
+                        
                         fun fib(x) {
                             if(x < 2)
                                 return 1;
@@ -190,6 +193,9 @@ public class ProgramTest {
 
                 while(z >= 10)
                     z = z / 2;
+                    
+                for(; false; )
+                    ;
 
                 """);
     }
@@ -293,6 +299,35 @@ public class ProgramTest {
                 }
                 
                 printValue(delegate);        
+                
+                """);
+    }
+
+    @Test
+    public void codeTest10() throws ParsingException, ScanningException {
+        runTest("""
+                
+                class A {}
+                class B {}
+                
+                var a = A();
+                var b = B();
+                var c;
+                
+                if(a is b)
+                    print("A is B");
+                else
+                    print("A is not B");  
+
+                if(true is false)
+                    print("true is false");
+                else
+                    print("true is not false");    
+                
+                if(c is null)
+                    print("c is null");
+                else
+                    print("c is not null");
                 
                 """);
     }

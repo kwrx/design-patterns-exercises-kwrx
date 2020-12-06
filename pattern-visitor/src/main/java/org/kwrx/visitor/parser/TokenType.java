@@ -47,6 +47,7 @@ public enum TokenType {
     EQUAL_EQUAL,
     GREATER, GREATER_EQUAL,
     LESS, LESS_EQUAL,
+    IS,
 
     IDENTIFIER,
     STRING,
@@ -71,7 +72,7 @@ public enum TokenType {
 
     TRUE,
     FALSE,
-    NIL,
+    NULL,
 
     EOF,
 

@@ -37,7 +37,7 @@ import org.kwrx.visitor.parser.Token;
 import org.kwrx.visitor.parser.TokenType;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -152,15 +152,14 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
         runningContext.define(statement.getName(), new Symbol(new SymbolClass(statement.getName(), superclass,
 
-                new LinkedHashMap<>() {{
+                new HashMap<>() {{
                         for (var fun : statement.getMethods())
                             put(fun.getName(), new Symbol(createSymbolCallable(fun)));
                 }},
 
-                new LinkedHashMap<>() {{
+                new HashMap<>() {{
                         for (var var : statement.getVariables())
                             put(var.getName(), eval(var.getConstructor()));
-
                 }}
 
         )));
@@ -189,6 +188,7 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
             case GREATER_EQUAL -> Number.gre(left, right);
             case LESS_EQUAL    -> Number.lse(left, right);
 
+            case IS            -> Logical.from( Dynamic.isSameType(left, right));
             case EQUAL_EQUAL   -> Logical.from( Dynamic.isEquals(left, right));
             case BANG_EQUAL    -> Logical.from(!Dynamic.isEquals(left, right));
 
@@ -209,7 +209,7 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
     public Dynamic visitLiteralExpression(LiteralExpression e) {
 
         if(e.getLiteral() == null)
-            return Nil.value();
+            return Null.value();
 
 
         return switch (e.getLiteral().getClass().getSimpleName()) {
@@ -227,10 +227,6 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
     @Override
     public Dynamic visitUnaryExpression(UnaryExpression e) {
-
-        if(e.getRight() instanceof VariableExpression && e.getOperator().getType() == TokenType.AND)
-            return new Reference(((VariableExpression) e.getRight()).getName());
-
 
         return switch (e.getOperator().getType()) {
 
@@ -343,7 +339,7 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
 
     @Override
     public Dynamic visitNoopExpression(NoopExpression e) {
-        return Nil.value();
+        return Null.value();
     }
 
 
@@ -378,7 +374,7 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
         }
 
 
-        return Nil.value();
+        return Null.value();
 
     }
 
@@ -426,6 +422,10 @@ public class Interpreter implements Statement.Visitor, Expression.Visitor {
         };
     }
 
+
+    public Context getRunningContext() {
+        return runningContext;
+    }
 
     public Context execute() {
 

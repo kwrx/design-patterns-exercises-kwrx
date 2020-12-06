@@ -26,8 +26,6 @@
 package org.kwrx.visitor;
 
 import org.kwrx.visitor.interp.types.Dynamic;
-import org.kwrx.visitor.interp.types.Instance;
-import org.kwrx.visitor.interp.types.Reference;
 import org.kwrx.visitor.parser.Token;
 
 import java.util.HashMap;
@@ -36,19 +34,16 @@ import java.util.Map;
 public class Context {
 
     private final Context parent;
-    private final Instance thisClass;
     private final Map<String, Dynamic> defines;
 
     public Context() {
         this.defines = new HashMap<>();
         this.parent = null;
-        this.thisClass = null;
     }
 
     public Context(Context parent) {
         this.defines = new HashMap<>();
         this.parent = parent;
-        this.thisClass = null;
     }
 
 
@@ -56,9 +51,6 @@ public class Context {
         return parent;
     }
 
-    public Instance getThisClass() {
-        return thisClass;
-    }
 
     public Map<String, Dynamic> getDefines() {
         return defines;
@@ -77,7 +69,7 @@ public class Context {
     public Dynamic resolve(Token name) {
 
         if(defines.containsKey(name.getLexeme()))
-            return unreference(defines.get(name.getLexeme()));
+            return defines.get(name.getLexeme());
 
         if(parent != null)
             return parent.resolve(name);
@@ -97,16 +89,6 @@ public class Context {
 
 
         throw new RunningException(name, "undefined symbol in current context");
-
-    }
-
-
-    private Dynamic unreference(Dynamic dynamic) {
-
-        if(dynamic instanceof Reference)
-            return resolve(((Reference) dynamic).getReference());
-
-        return dynamic;
 
     }
 

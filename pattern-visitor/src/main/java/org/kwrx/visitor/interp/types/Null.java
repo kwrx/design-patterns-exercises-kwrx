@@ -25,21 +25,21 @@
 
 package org.kwrx.visitor.interp.types;
 
-public class Nil extends Dynamic {
+public class Null extends Dynamic {
 
-    private final static Nil instance = new Nil(null);
+    private final static Null instance = new Null(null);
 
-    private Nil(Object value) {
+    private Null(Object value) {
         super(null);
     }
 
     @Override
     public String getType() {
-        return "<nil>";
+        return "<null>";
     }
 
 
-    public static Nil value() {
+    public static Null value() {
         return instance;
     }
 

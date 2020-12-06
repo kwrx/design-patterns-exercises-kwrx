@@ -47,7 +47,7 @@ public class Dynamic {
         if(dyn == null)
             return false;
 
-        if(dyn instanceof Nil)
+        if(dyn instanceof Null)
             return false;
 
         if(dyn instanceof Logical)
@@ -57,15 +57,34 @@ public class Dynamic {
 
     }
 
+
     public static boolean isEquals(Dynamic left, Dynamic right) {
 
-        if(left instanceof Nil && right instanceof Nil)
+        if(left instanceof Null && right instanceof Null)
             return true;
 
-        if(left instanceof Nil)
+        if(left instanceof Null)
             return false;
 
         return left.getValue().equals(right.getValue());
+
+    }
+
+
+    public static boolean isSameType(Dynamic left, Dynamic right) {
+
+        String leftType = left.getType();
+        String rightType = right.getType();
+
+
+        if(left instanceof Instance || left instanceof Symbol)
+            leftType = left.getValue().toString();
+
+        if(right instanceof Instance || right instanceof Symbol)
+            rightType = right.getValue().toString();
+
+
+        return leftType.equals(rightType);
 
     }
 

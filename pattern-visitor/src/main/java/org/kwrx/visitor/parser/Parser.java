@@ -31,6 +31,7 @@ import org.kwrx.visitor.interp.expressions.*;
 import org.kwrx.visitor.interp.statements.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -130,8 +131,13 @@ public class Parser {
 
         Expression left = parseComparision();
 
-        while(matchNextTokens(TokenType.EQUAL_EQUAL) || matchNextTokens(TokenType.BANG_EQUAL))
+        while(
+                matchNextTokens(TokenType.EQUAL_EQUAL) ||
+                matchNextTokens(TokenType.BANG_EQUAL)  ||
+                matchNextTokens(TokenType.IS)
+        ) {
             left = new BinaryExpression(left, getPreviousToken(), parseComparision());
+        }
 
         return left;
 
@@ -256,7 +262,7 @@ public class Parser {
 
             case TRUE  -> new LiteralExpression(true);
             case FALSE -> new LiteralExpression(false);
-            case NIL   -> new LiteralExpression(null);
+            case NULL -> new LiteralExpression(null);
             case THIS  -> new ThisExpression(getPreviousToken());
             case SUPER -> new SuperExpression(getPreviousToken());
             case NUMBER, STRING -> new LiteralExpression(getPreviousToken().getLiteral());
@@ -276,6 +282,9 @@ public class Parser {
 
 
     private Statement parseExpressionStatement() throws ParsingException {
+
+        if(matchNextTokens(TokenType.SEMICOLON))
+            return new ExpressionStatement(new NoopExpression());
 
         Expression e = parseExpression();
         checkSyntax(TokenType.SEMICOLON, "expected ';' after an expression");
@@ -347,15 +356,13 @@ public class Parser {
         checkSyntax(TokenType.LEFT_PAREN, "expected '(' in a for statement");
 
 
-        if(matchNextTokens(TokenType.SEMICOLON))
-            initializer = new ExpressionStatement(new NoopExpression());
-        else if(matchNextTokens(TokenType.VAR))
+        if (matchNextTokens(TokenType.VAR))
             initializer = parseVariableStatement();
         else
             initializer = parseExpressionStatement();
 
 
-        if(!matchNextTokens(TokenType.SEMICOLON)) {
+        if (!matchNextTokens(TokenType.SEMICOLON)) {
 
             condition = parseExpression();
             checkSyntax(TokenType.SEMICOLON, "expected ';' in a for condition block");
@@ -367,7 +374,7 @@ public class Parser {
         }
 
 
-        if(!matchNextTokens(TokenType.RIGHT_PAREN)) {
+        if (!matchNextTokens(TokenType.RIGHT_PAREN)) {
 
             increment = new ExpressionStatement(parseExpression());
             checkSyntax(TokenType.RIGHT_PAREN, "expected ')' in a for statement");
@@ -421,9 +428,18 @@ public class Parser {
 
             }
 
-            checkSyntax(TokenType.LEFT_BRACE, "expected '{' after a function declaration");
+        }}, parseFunctionBodyStatement());
 
-        }}, parseBlockStatement(true));
+    }
+
+
+    private BlockStatement parseFunctionBodyStatement() throws ParsingException {
+
+        if(matchNextTokens(TokenType.SEMICOLON))
+            return new BlockStatement(Collections.emptyList(), true);
+
+        checkSyntax(TokenType.LEFT_BRACE, "expected '{' after a function declaration");
+        return parseBlockStatement(true);
 
     }
 
