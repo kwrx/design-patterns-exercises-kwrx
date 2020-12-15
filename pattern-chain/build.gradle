@@ -32,7 +32,7 @@ plugins {
 }
 
 
-group = 'org.kwrx.prototype'
+group = 'org.kwrx.chain'
 version = '1.0'
 
 sourceCompatibility = 11
