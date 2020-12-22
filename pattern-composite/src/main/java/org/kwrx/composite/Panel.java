@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,33 +23,29 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
+package org.kwrx.composite;
 
+import java.util.ArrayList;
+import java.util.List;
 
-group = 'org.kwrx.chain'
-version = '1.0'
+public class Panel implements Component {
 
-sourceCompatibility = 11
-targetCompatibility = 11
+    private final List<Component> components;
 
-mainClassName = 'Program'
+    public Panel() {
+        components = new ArrayList<>();
+    }
 
+    public void add(Component component) {
+        components.add(component);
+    }
 
-repositories {
-    mavenCentral()
-}
+    public void remove(Component component) {
+        components.remove(component);
+    }
 
-dependencies {
-    implementation project(':shared')
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
-
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
+    @Override
+    public void draw() {
+        components.forEach(Component::draw);
+    }
 }

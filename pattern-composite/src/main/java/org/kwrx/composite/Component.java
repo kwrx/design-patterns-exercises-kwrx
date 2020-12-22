@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,33 +23,8 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
+package org.kwrx.composite;
 
-
-group = 'org.kwrx.chain'
-version = '1.0'
-
-sourceCompatibility = 11
-targetCompatibility = 11
-
-mainClassName = 'Program'
-
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation project(':shared')
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
-
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
+public interface Component {
+    void draw();
 }

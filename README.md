@@ -13,7 +13,7 @@
 
 - [x] Bridge
 - [x] Adapter
-- [ ] Composite
+- [x] Composite
 - [ ] Decorator
 - [ ] Facade
 - [ ] Flyweight

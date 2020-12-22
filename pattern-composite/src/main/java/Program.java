@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,33 +23,28 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
+import org.kwrx.composite.Button;
+import org.kwrx.composite.Image;
+import org.kwrx.composite.Panel;
 
+public class Program {
+    public static void main(String... args) {
 
-group = 'org.kwrx.chain'
-version = '1.0'
+        new Panel() {{
 
-sourceCompatibility = 11
-targetCompatibility = 11
+            add(new Button("Hello"));
+            add(new Button("World"));
 
-mainClassName = 'Program'
+            add(new Panel() {{
 
+                add(new Button("Child Button inside a panel"));
+                add(new Image("blabla1.png"));
+                add(new Image("blabla2.png"));
+                add(new Image("blabla3.png"));
 
-repositories {
-    mavenCentral()
-}
+            }});
 
-dependencies {
-    implementation project(':shared')
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
+        }}.draw();
 
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
+    }
 }

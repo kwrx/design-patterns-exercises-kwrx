@@ -1,4 +1,3 @@
-
 /*
  * MIT License
  *
@@ -24,33 +23,18 @@
  *
  */
 
-plugins {
-    id 'idea'
-    id 'java'
-    id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
+package org.kwrx.composite;
 
+public class Image implements Component {
 
-group = 'org.kwrx.chain'
-version = '1.0'
+    private final String path;
 
-sourceCompatibility = 11
-targetCompatibility = 11
+    public Image(String path) {
+        this.path = path;
+    }
 
-mainClassName = 'Program'
-
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation project(':shared')
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-}
-
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media' ]
+    @Override
+    public void draw() {
+        System.out.printf("Drawed a image %s", path);
+    }
 }
